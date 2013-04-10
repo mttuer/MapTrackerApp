@@ -1,7 +1,10 @@
 package interfaces;
 import java.util.List;
 import dataWrappers.*;
-
+/**
+ * TrackerDB
+ *
+ */
 public interface TrackerDB {
 	//GPS
 	public boolean addGPSData(List<GPS> gps, long routeID);
