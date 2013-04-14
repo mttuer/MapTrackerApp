@@ -28,9 +28,9 @@ public class Database implements TrackerDB{
 
 	static final String tbRoute = "CREATE TABLE TB_ROUTES IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED INTEGER, routeID INTEGER, name TEXT, location TEXT, "+
 	"startTime INTEGER, endTime INTEGER, countDatraPoints INTEGER)";
-	static final String DATABASE_NAME = "a";
+	static final String DATABASE_NAME = "DB_TRACKER";
 	static final int DATABASE_VERSION = 1;
-	static final String DATABASE_CREATE ="CREATE DATBASE DB_TRACKER IF NOT EXISTS";
+	static final String DATABASE_CREATE ="CREATE DATABASE DB_TRACKER IF NOT EXISTS";
 	
 	Context ctx;
 	DatabaseHelper dbHelper;
@@ -67,7 +67,7 @@ public class Database implements TrackerDB{
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(DATABASE_CREATE);
+           // db.execSQL(DATABASE_CREATE);
             db.execSQL(tbGPS);
             db.execSQL(tbMarker);
             db.execSQL(tbRoute);
@@ -236,7 +236,7 @@ public class Database implements TrackerDB{
 
 	@Override
 	public boolean addMarkers(List<DBMarker> markers, long routeID) {
-		if(markers.isEmpty())
+		if(markers == null || markers.isEmpty())
 			return false;
 		
 		ContentValues cv = new ContentValues();

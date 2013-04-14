@@ -1,5 +1,6 @@
 package com.example.maptracker;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,8 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 	
 	@Override
 	public Object getChild(int arg0, int arg1) {
-		Route r = allMarkers.get(arg0);
-		return groupAndChild.get(arg0).get(arg1 + 1);
+		Route r = routes.get(arg0);
+		return allMarkers.get(arg0);
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int arg0, int arg1, boolean arg2, View arg3,
 			ViewGroup arg4) {
-		
+		Route r = routes.get(arg0);
 		// Create a vertical view to store the interface
 		LinearLayout vert = new LinearLayout(context);
 		vert.setOrientation(LinearLayout.VERTICAL);
@@ -56,7 +57,10 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 
 		// view representing location
 		TextView tv = new TextView(context);
-		tv.setText("Route Time: " + groupAndChild.get(arg0).get(arg1 + 1));
+		Date d = new Date(r.timeStart);
+		Date dEnd = new Date(r.timeEnd);
+		tv.setText("Route Time: " + d.getHours() + "-" + dEnd.getHours());
+		
 		hz.addView(tv);
 		
 		// button for editing 
@@ -68,8 +72,8 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 		
 		// Add text view for notes about the route
 		EditText edTxt = new EditText(context);
-		edTxt.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 		edTxt.setLines(4);
+		edTxt.setText(r.notes);
 		vert.addView(edTxt);
 		
 		
@@ -96,17 +100,17 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 
 	@Override
 	public int getChildrenCount(int arg0) {
-		return groupAndChild.get(arg0).size() - 1;
+		return allMarkers.get(routes.get(arg0)).size();
 	}
 
 	@Override
 	public Object getGroup(int arg0) {
-		return groupAndChild.get(arg0);
+		return routes.get(arg0);
 	}
 
 	@Override
 	public int getGroupCount() {
-		return groupAndChild.size();
+		return routes.size();
 	}
 
 	@Override
@@ -117,7 +121,9 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int arg0, boolean arg1, View arg2, ViewGroup arg3) {
 		TextView tv = new TextView(context);
-		tv.setText(groupAndChild.get(arg0).get(0) + " - ");
+		Route r = routes.get(arg0);
+		Date d = new Date(r.timeStart);
+		tv.setText(r.routeName + " - " + d.getDate());
 		return tv;
 	}
 
