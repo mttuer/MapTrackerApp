@@ -1,6 +1,6 @@
 package dataWrappers;
 
-public class Route {
+public class DBRoute {
 	public long routeID;
 	public long timeStart;
 	public long timeEnd;

@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import dataWrappers.DBMarker;
-import dataWrappers.Route;
+import dataWrappers.DBRoute;
+
+
 
 import android.content.Context;
 import android.text.InputType;
@@ -21,10 +23,10 @@ import android.widget.TextView;
 
 public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 	Context context;
-	List<Route> routes;
-	Map<Route, List<DBMarker>> allMarkers;
+	List<DBRoute> routes;
+	Map<DBRoute, List<DBMarker>> allMarkers;
 	
-	public ExportExpandableListAdaptor(Context ctx, List<Route> routes, Map<Route,List<DBMarker>> markers){
+	public ExportExpandableListAdaptor(Context ctx, List<DBRoute> routes, Map<DBRoute,List<DBMarker>> markers){
 		//super();
 		context = ctx;
 		allMarkers = markers;
@@ -34,7 +36,7 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 	
 	@Override
 	public Object getChild(int arg0, int arg1) {
-		Route r = routes.get(arg0);
+		DBRoute r = routes.get(arg0);
 		return allMarkers.get(arg0);
 	}
 
@@ -46,7 +48,7 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int arg0, int arg1, boolean arg2, View arg3,
 			ViewGroup arg4) {
-		Route r = routes.get(arg0);
+		DBRoute r = routes.get(arg0);
 		// Create a vertical view to store the interface
 		LinearLayout vert = new LinearLayout(context);
 		vert.setOrientation(LinearLayout.VERTICAL);
@@ -121,7 +123,7 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int arg0, boolean arg1, View arg2, ViewGroup arg3) {
 		TextView tv = new TextView(context);
-		Route r = routes.get(arg0);
+		DBRoute r = routes.get(arg0);
 		Date d = new Date(r.timeStart);
 		tv.setText(r.routeName + " - " + d.getDate());
 		return tv;
