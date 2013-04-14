@@ -1,6 +1,6 @@
 package dataWrappers;
 
-public class Marker {
+public class DBMarker {
 	public long markerID;
 	public long routeID;
 	public String pictureLink;
