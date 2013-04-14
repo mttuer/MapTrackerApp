@@ -2,13 +2,18 @@ package com.example.trackerappmap;
 
 import interfaces.TrackerDB;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import util.Database;
 
+
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -21,9 +26,12 @@ import android.widget.TextView;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -32,19 +40,30 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import dataWrappers.DBMarker;
 import dataWrappers.GPS;
-import dataWrappers.Route;
+import dataWrappers.DBRoute;
 
 
 
 public class MainActivity extends FragmentActivity implements OnMarkerClickListener{
 	
-	LinkedList<DBMarker> markerList = new LinkedList<DBMarker>();
-	LinkedList<GPS> gpsList = new LinkedList<GPS>();
-	HashMap<DBMarker, Marker> markerHashTable = new HashMap<DBMarker, Marker>();
-	boolean currentlyTracking = false;
-	int gpsFreq = 5000;
-	Route thisRoute = new Route();
+	public LinkedList<DBMarker> markerList = new LinkedList<DBMarker>();
+	public LinkedList<GPS> gpsList = new LinkedList<GPS>();
+	public HashMap<DBMarker, Marker> markerHashTable = new HashMap<DBMarker, Marker>();
+	public long gpsTimeFreq = 5000;
+	public int gpsMaxDistanceFreq = 500;
+	public int gpsMinDistanceFreq = 10;
+	public DBRoute thisRoute = new DBRoute();
 	Database database = new Database(this);
+	public LocationManager locationManager;
+	public String provider;
+	public LocationListener locListener;
+	PolylineOptions lineOptions = null;
+	public GoogleMap map;
+	Polyline oldPolyline = null;
+	LatLng lastPosition;
+	Marker startMarker;
+	Marker endMarker;
+
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +72,101 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 		
 		//Create the map Fragment
 		GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
-        GoogleMap map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+        map = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+        
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+        locListener = new LocationListener(){
+        	
+        	public void onLocationChanged(Location location)
+        	{
+				LatLng thisLocation = new LatLng(location.getLatitude(), location.getLongitude());
+				double distance = 0;
+				
+				if(lastPosition != null)
+				{
+					distance = measure(thisLocation.latitude, thisLocation.longitude, lastPosition.latitude, lastPosition.longitude);
+				}
+				
+				if(lastPosition == null)
+				{
+					startMarker = map.addMarker(new MarkerOptions()
+			        .position(thisLocation)
+			        .title("Starting marker"));
+				}
+
+				if(lastPosition == null || (distance < gpsMaxDistanceFreq && distance > gpsMinDistanceFreq))
+				{
+					//Create a new GPS object
+					GPS gpsObject = new GPS();
+					gpsObject.latitude = location.getLatitude();
+					gpsObject.longitude = location.getLongitude();
+					gpsObject.time = location.getTime();
+					gpsList.add(gpsObject);
+	        		
+					System.out.println("Pass at Loc: " + thisLocation.latitude + ", " + thisLocation.longitude);
+
+					if(lineOptions == null && oldPolyline == null)
+					{
+						lineOptions = new PolylineOptions();
+						lineOptions.add(thisLocation);
+					}
+					else if (lineOptions != null && oldPolyline == null)
+					{
+						lineOptions.add(thisLocation);
+						oldPolyline = map.addPolyline(lineOptions);
+					}
+					else
+					{
+						lineOptions.add(thisLocation);
+						oldPolyline.remove();
+						oldPolyline = map.addPolyline(lineOptions);
+					}
+					
+					lastPosition = thisLocation;
+				}		
+            }
+        	
+        	public void onProviderDisabled(String provider) {}
+        	public void onProviderEnabled(String provider) {}
+        	public void onStatusChanged(String provider, int status, Bundle extras) {}
+        };
+        
+		database.open();
+        
+        Location location = getLocation();
+    	LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+        long startTime = location.getTime();
+       for(int i = 0; i < 5; i++)
+        {
+        	//Create a new GPS object
+			GPS gpsObject = new GPS();
+			gpsObject.latitude = Math.random();
+			gpsObject.longitude = Math.random();
+			gpsObject.time = location.getTime();
+			gpsList.add(gpsObject);
+        }
+       
+		database.addNewRoute(gpsList, markerList, startTime, getLocation().getTime(), "", "Test route", "Mikes House");
+
+       
+       List<DBRoute> routeList = database.getAllRoutes();
+       for(DBRoute route : routeList)
+       {
+    	   System.out.println("Route: " + route.routeID);
+    	   List<GPS> gpsPoints = database.getGPSData(route.routeID);
+    	   for(GPS gps : gpsPoints)
+    	   {
+    		   System.out.println("GPS: " + gps.latitude + ", " + gps.longitude + " at " + gps.time);
+    	   }
+       }
         
 	}
 	
 	//Creates a marker on the map based on the current location and links it with the current marker
-	public void createMarker(GoogleMap map, DBMarker marker)
+	public void createMarker(DBMarker marker)
 	{
 		//Call get location function
         Location location = getLocation();
@@ -94,7 +202,7 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 	}
 	
 	//Removes the marker from the map
-	public void deleteMarker(GoogleMap map, DBMarker marker)
+	public void deleteMarker(DBMarker marker)
 	{
 		Marker locationMarker = markerHashTable.get(marker);
 		locationMarker.remove();
@@ -102,44 +210,21 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 
 	//Get location every 3 seconds and save a GPS object to the GPS list.
 	//Add a line to the new location
-	public void startTracking(GoogleMap map)
+	public void startTracking()
 	{
-		currentlyTracking = true;
-		long time = System.currentTimeMillis();
-		PolylineOptions lineOptions = new PolylineOptions();
-		boolean justStarted = true;
+		thisRoute.timeStart = System.currentTimeMillis();
 		
-		while(currentlyTracking)
-		{
-			if(System.currentTimeMillis() - time > gpsFreq)
-			{
-				if(justStarted == true)
-				{
-					justStarted = false;
-					thisRoute.timeStart = System.currentTimeMillis();
-				}
-				//Call get location function
-		        Location location = getLocation();
-		        
-	        	//Create a new GPS object
-	        	GPS gpsObject = new GPS();
-	        	gpsObject.latitude = location.getLatitude();
-	        	gpsObject.longitude = location.getLongitude();
-	        	gpsObject.time = location.getTime();
-	        	gpsList.add(gpsObject);
-	        	
-				LatLng thisLocation = new LatLng(location.getLatitude(), location.getLongitude());
-				lineOptions.add(thisLocation);
-				
-				map.addPolyline(lineOptions);
-			}
-		}
+		locationManager.requestLocationUpdates(provider, gpsTimeFreq, 0, locListener);
 	}
 	
 	//Stops tracking and saves the route data to the database
 	public void stopTracking(String routeName, String notes, String location)
 	{
-		currentlyTracking = false;
+		endMarker = map.addMarker(new MarkerOptions()
+			        .position(new LatLng(getLocation().getLatitude(), getLocation().getLongitude()))
+			        .title("Ending marker"));
+		locationManager.removeUpdates(locListener);
+		
 		thisRoute.timeEnd = System.currentTimeMillis();
 		thisRoute.routeName = routeName;
 		thisRoute.notes = notes;
@@ -149,7 +234,7 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 	}
 	
 	//Draws a line on the map for a given linked list of GPS objects
-	public void drawPath(GoogleMap map, LinkedList<GPS> gpsList)
+	public void drawPath(LinkedList<GPS> gpsList)
 	{
 
 		PolylineOptions lineOptions = new PolylineOptions();
@@ -166,18 +251,43 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 	
 	//Get location object
 	public Location getLocation()
-	{
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String provider = locationManager.getBestProvider(criteria, false);
-        
+	{        
         return locationManager.getLastKnownLocation(provider);
 	}
 
 	//Fill in code here for what to do when Google Maps Marker is clicked
 	//Check which DBMarker is connected with argument Marker and go from there
 	public boolean onMarkerClick(Marker arg0) {
-		return false;
+		
+		if(arg0.equals(startMarker) || arg0.equals(endMarker))
+			return false;
+		
+		Set<DBMarker> keyList = markerHashTable.keySet();
+		DBMarker oldMarker = null;
+		DBMarker editedMarker = null;
+		
+		for(DBMarker marker : keyList)
+		{
+			if(markerHashTable.get(marker).equals(arg0))
+			{
+				//editedMarker = someFunction(markerHashTable.get(marker));
+				markerHashTable.put(editedMarker, arg0);
+				break;
+			}
+		}
+		
+		return true;
+	}
+	
+	//Convert two lat/long coordinates to get the distance in meters
+	public double measure(double lat1, double lon1, double lat2, double lon2){  // generally used geo measurement function
+		double R = 6378.137; // Radius of earth in KM
+		double dLat = (lat2 - lat1) * Math.PI / 180;
+		double dLon = (lon2 - lon1) * Math.PI / 180;
+		double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		double d = R * c;
+	    return d * 1000; // meters
 	}
 
 }
