@@ -19,18 +19,19 @@ import dataWrappers.Route;
 public class Database implements TrackerDB{
 	SQLiteDatabase db;
 	static final String DatabaseName = "DB_TRACKER";
-	final String tbGPS = "CREATE TABLE TB_GPS_DATA (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, " +
+	static final String tbGPS = "CREATE TABLE TB_GPS_DATA IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, " +
 					"time INTEGER, latitude REAL, longitude REAL)";
 	
-	final String tbMarker = "CREATE TABLE TB_MARKER_DATA (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, gpsID INTEGER, " +
+	static final String tbMarker = "CREATE TABLE TB_MARKER_DATA  IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, gpsID INTEGER, " +
 	"picPath TEXT, vidPath TEXT, audioPath TEXT, comment TEXT, time INTEGER, longitude "+
 	"INTEGER, latitude INTEGER)";
 
-	final String tbRoute = "CREATE TABLE TB_ROUTES (_ID INTEGER PRIMARY KEY, _UPLOADED INTEGER, routeID INTEGER, name TEXT, location TEXT, "+
+	static final String tbRoute = "CREATE TABLE TB_ROUTES IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED INTEGER, routeID INTEGER, name TEXT, location TEXT, "+
 	"startTime INTEGER, endTime INTEGER, countDatraPoints INTEGER)";
 	static final String DATABASE_NAME = "a";
 	static final int DATABASE_VERSION = 1;
-	static final String DATABASE_CREATE ="";
+	static final String DATABASE_CREATE ="CREATE DATBASE DB_TRACKER IF NOT EXISTS";
+	
 	Context ctx;
 	DatabaseHelper dbHelper;
 	
@@ -66,8 +67,10 @@ public class Database implements TrackerDB{
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-
             db.execSQL(DATABASE_CREATE);
+            db.execSQL(tbGPS);
+            db.execSQL(tbMarker);
+            db.execSQL(tbRoute);
         }
 
         @Override
