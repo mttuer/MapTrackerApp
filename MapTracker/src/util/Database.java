@@ -70,6 +70,9 @@ public class Database implements TrackerDB{
         @Override
         public void onCreate(SQLiteDatabase db) {
            // db.execSQL(DATABASE_CREATE);
+        	db.execSQL("DROP TABLE TB_MARKER_DATA");
+        	db.execSQL("DROP TABLE TB_GPS_DATA");
+        	db.execSQL("DROP TABLE TB_ROUTES");
             db.execSQL(tbGPS);
             db.execSQL(tbMarker);
             db.execSQL(tbRoute);
