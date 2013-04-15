@@ -22,14 +22,14 @@ public class Database implements TrackerDB{
 	SQLiteDatabase db;
 	static final String DatabaseName = "DB_TRACKER";
 	
-	static final String tbGPS = "CREATE TABLE TB_GPS_DATA IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, " +
+	static final String tbGPS = "CREATE TABLE IF NOT EXISTS TB_GPS_DATA  (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, " +
 					"time INTEGER, latitude REAL, longitude REAL)";
 	
-	static final String tbMarker = "CREATE TABLE TB_MARKER_DATA  IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, gpsID INTEGER, " +
+	static final String tbMarker = "CREATE TABLE  IF NOT EXISTS TB_MARKER_DATA  (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, gpsID INTEGER, " +
 	"picPath TEXT, vidPath TEXT, audioPath TEXT, comment TEXT, time INTEGER, longitude "+
 	"INTEGER, latitude INTEGER)";
 
-	static final String tbRoute = "CREATE TABLE TB_ROUTES IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED INTEGER, name TEXT,notes TEXT, location TEXT, "+
+	static final String tbRoute = "CREATE TABLE IF NOT EXISTS TB_ROUTES (_ID INTEGER PRIMARY KEY, _UPLOADED INTEGER, name TEXT,notes TEXT, location TEXT, "+
 	"startTime INTEGER, endTime INTEGER, countDataPoints INTEGER)";
 	static final String DATABASE_NAME = "DB_TRACKER";
 	static final int DATABASE_VERSION = 1;
@@ -71,9 +71,9 @@ public class Database implements TrackerDB{
         @Override
         public void onCreate(SQLiteDatabase db) {
            // db.execSQL(DATABASE_CREATE);
-        	db.execSQL("DROP TABLE TB_MARKER_DATA");
-        	db.execSQL("DROP TABLE TB_GPS_DATA");
-        	db.execSQL("DROP TABLE TB_ROUTES");
+        	db.execSQL("DROP TABLE IF EXISTS TB_MARKER_DATA");
+        	db.execSQL("DROP TABLE IF EXISTS TB_GPS_DATA");
+        	db.execSQL("DROP TABLE IF EXISTS TB_ROUTES");
             db.execSQL(tbGPS);
             db.execSQL(tbMarker);
             db.execSQL(tbRoute);

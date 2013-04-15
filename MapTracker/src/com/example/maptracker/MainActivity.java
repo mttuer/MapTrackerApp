@@ -1,8 +1,7 @@
 package com.example.maptracker;
 
-import interfaces.TrackerDB;
 
-import java.sql.SQLException;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,9 +16,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
@@ -86,7 +84,7 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fragment_map);
+		setContentView(R.layout.activity_main);
 		
 		//Create the map Fragment
 		GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
@@ -226,6 +224,36 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 				videoButtonClicked();
 			}
 		});
+		
+	
+		drawerComment = (Button) findViewById(R.id.drawerButtonComment);
+		drawerComment.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+
+				// custom dialog
+				final Dialog dialog = new Dialog(arg0.getContext());
+				dialog.setContentView(R.layout.alert_dialog);
+				dialog.setTitle("Comment!");
+
+				// set the custom dialog components - text, image and button
+				TextView text = (TextView) dialog.findViewById(R.id.text);
+				text.setText("Type comment below:");
+
+				Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonConfirm);
+				// if button is clicked, close the custom dialog
+				dialogButton.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+						}
+					});
+	
+				dialog.show();
+				}
+			});
+
         
 	}
 	

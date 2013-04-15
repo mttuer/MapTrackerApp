@@ -42,7 +42,7 @@
         <activity android:name="com.example.maptracker.SettingsActivity"></activity>
                 <meta-data
     		android:name="com.google.android.maps.v2.API_KEY"
-    		android:value="AIzaSyCVajZOirNNcZpGQYy7Hc9RBwqkXz0CkCk"/>
+    		android:value="AIzaSyDzeHkzl00vT02sJhBllQG5-SP5sIaz6pU"/>
                 
                 
     </application>
