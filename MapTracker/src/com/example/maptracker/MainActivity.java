@@ -216,23 +216,33 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 		drawerCamera = (Button) findViewById(R.id.drawerButtonCamera);
 		drawerCamera.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				
-			    // start the image capture Intent
-			    startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+				cameraButtonClicked();
 			}
 		});
 		
 		drawerVideo = (Button) findViewById(R.id.drawerButtonVideo);
 		drawerVideo.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
-				Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-				
-			    // start the image capture Intent
-			    startActivityForResult(intent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+				videoButtonClicked();
 			}
 		});
         
+	}
+	
+	public void videoButtonClicked() {
+		Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+		
+	    // start the image capture Intent
+	    startActivityForResult(intent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+		
+	}
+
+	public void cameraButtonClicked() {
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		
+	    // start the image capture Intent
+	    startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+		
 	}
 	
 	//Creates a marker on the map based on the current location and links it with the current marker
