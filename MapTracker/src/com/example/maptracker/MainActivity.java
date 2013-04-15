@@ -2,7 +2,6 @@ package com.example.maptracker;
 
 import interfaces.TrackerDB;
 
-<<<<<<< HEAD
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,14 +15,6 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-=======
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
->>>>>>> 5a2f59b861349e212dc2784e897375ea22ab3517
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -40,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.SlidingDrawer.OnDrawerCloseListener;
 import android.widget.SlidingDrawer.OnDrawerOpenListener;
-<<<<<<< HEAD
 import android.support.v4.app.FragmentActivity;
 
 
@@ -87,22 +77,11 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 	Marker endMarker;
 
 	
-=======
-import android.widget.TextView;
-import android.widget.Toast;
-
-public class MainActivity extends Activity {
-
-	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
-
->>>>>>> 5a2f59b861349e212dc2784e897375ea22ab3517
 	Button export;
 	Button edit;
 	Button menu;
 	Button handle, drawerMenu, drawerComment, drawerCamera, drawerMarker, drawerAudio, drawerVideo;
 	SlidingDrawer sliding;
-<<<<<<< HEAD
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -227,88 +206,32 @@ public class MainActivity extends Activity {
        });
        
        drawerMenu = (Button) findViewById(R.id.drawerButtonMenu);
-=======
-	final Context context = this;
-
-	@SuppressWarnings("deprecation")
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-
-		drawerComment = (Button) findViewById(R.id.drawerButtonComment);
-		drawerComment.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-
-				// custom dialog
-				final Dialog dialog = new Dialog(context);
-				dialog.setContentView(R.layout.alert_dialog);
-				dialog.setTitle("Comment!");
-
-				// set the custom dialog components - text, image and button
-				TextView text = (TextView) dialog.findViewById(R.id.text);
-				text.setText("Type comment below:");
-
-				Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonConfirm);
-				// if button is clicked, close the custom dialog
-				dialogButton.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialog.dismiss();
-					}
-				});
-
-				dialog.show();
-			}
-		});
-
-		handle = (Button) findViewById(R.id.handle);
-		sliding = (SlidingDrawer) findViewById(R.id.slidingDrawer1);
-		sliding.setOnDrawerOpenListener(new OnDrawerOpenListener() {
-			@Override
-			public void onDrawerOpened() {
-				handle.setBackgroundResource(R.drawable.arrowclose);
-			}
-		});
-
-		sliding.setOnDrawerCloseListener(new OnDrawerCloseListener() {
-			@Override
-			public void onDrawerClosed() {
-				handle.setBackgroundResource(R.drawable.arrowopen);
-			}
-		});
-
-		drawerMenu = (Button) findViewById(R.id.drawerButtonMenu);
->>>>>>> 5a2f59b861349e212dc2784e897375ea22ab3517
 		drawerMenu.setOnClickListener(new OnClickListener(){
-			public void onClick(View view) {
+		 public void onClick(View view) {
 				Intent i = new Intent(view.getContext(), MenuActivity.class);
-				startActivity(i);
-			}
+		        startActivity(i);
+		 	}
 		});
-
+		
 		drawerCamera = (Button) findViewById(R.id.drawerButtonCamera);
 		drawerCamera.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-				// start the image capture Intent
-				startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+				
+			    // start the image capture Intent
+			    startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 			}
 		});
-
+		
 		drawerVideo = (Button) findViewById(R.id.drawerButtonVideo);
 		drawerVideo.setOnClickListener(new OnClickListener() {
 			public void onClick(View view) {
 				Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-				// start the image capture Intent
-				startActivityForResult(intent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+				
+			    // start the image capture Intent
+			    startActivityForResult(intent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
 			}
 		});
-<<<<<<< HEAD
         
 	}
 	
@@ -448,43 +371,40 @@ public class MainActivity extends Activity {
 		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 		double d = R * c;
 	    return d * 1000; // meters
-=======
-
->>>>>>> 5a2f59b861349e212dc2784e897375ea22ab3517
 	}
-
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-			if (resultCode == RESULT_OK) {
-				// Image captured and saved to fileUri specified in the Intent
-				Toast.makeText(this, "Image saved to:\n" +
-						data.getData(), Toast.LENGTH_LONG).show();
-			} else if (resultCode == RESULT_CANCELED) {
-				// User cancelled the image capture
-			} else {
-				// Image capture failed, advise user
-			}
-		}
+	    if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+	        if (resultCode == RESULT_OK) {
+	            // Image captured and saved to fileUri specified in the Intent
+	            Toast.makeText(this, "Image saved to:\n" +
+	                     data.getData(), Toast.LENGTH_LONG).show();
+	        } else if (resultCode == RESULT_CANCELED) {
+	            // User cancelled the image capture
+	        } else {
+	            // Image capture failed, advise user
+	        }
+	    }
 
-		if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
-			if (resultCode == RESULT_OK) {
-				// Video captured and saved to fileUri specified in the Intent
-				Toast.makeText(this, "Video saved to:\n" +
-						data.getData(), Toast.LENGTH_LONG).show();
-			} else if (resultCode == RESULT_CANCELED) {
-				// User cancelled the video capture
-			} else {
-				// Video capture failed, advise user
-			}
-		}
+	    if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
+	        if (resultCode == RESULT_OK) {
+	            // Video captured and saved to fileUri specified in the Intent
+	            Toast.makeText(this, "Video saved to:\n" +
+	                     data.getData(), Toast.LENGTH_LONG).show();
+	        } else if (resultCode == RESULT_CANCELED) {
+	            // User cancelled the video capture
+	        } else {
+	            // Video capture failed, advise user
+	        }
+	    }
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
-
+		
 		return true;
 	}
 
