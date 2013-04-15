@@ -5,13 +5,9 @@
  * should not be modified by hand.
  */
 
-package com.example.maptracker;
+package android.support.v7.gridlayout;
 
 public final class R {
-    public static final class array {
-        public static final int trackingOptions=0x7f070000;
-        public static final int trackingValues=0x7f070001;
-    }
     public static final class attr {
         /** 
         When set to alignMargins, causes alignment to take place between the outer
@@ -36,7 +32,7 @@ public final class R {
             </td></tr>
 </table>
          */
-        public static final int alignmentMode=0x7f010004;
+        public static int alignmentMode=0x7f010004;
         /**  The maximum number of columns to create when automatically positioning children. 
          <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
@@ -45,7 +41,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int columnCount=0x7f010002;
+        public static int columnCount=0x7f010002;
         /** 
         When set to true, forces column boundaries to appear in the same order
         as column indices.
@@ -59,7 +55,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int columnOrderPreserved=0x7f010006;
+        public static int columnOrderPreserved=0x7f010006;
         /** 
         The column boundary delimiting the left of the group of cells
         occupied by this view.
@@ -71,7 +67,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int layout_column=0x7f010009;
+        public static int layout_column=0x7f010009;
         /** 
         The column span: the difference between the right and left
         boundaries delimiting the group of cells occupied by this view.
@@ -85,7 +81,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int layout_columnSpan=0x7f01000a;
+        public static int layout_columnSpan=0x7f01000a;
         /** 
         Gravity specifies how a component should be placed in its group of cells.
         The default is LEFT | BASELINE.
@@ -123,7 +119,7 @@ containing a value of this type.
 <tr><td><code>end</code></td><td>0x00800005</td><td> Push object to the end of its container, not changing its size. </td></tr>
 </table>
          */
-        public static final int layout_gravity=0x7f01000b;
+        public static int layout_gravity=0x7f01000b;
         /**  END MarginLayout layoutparams 
 
         The row boundary delimiting the top of the group of cells
@@ -136,7 +132,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int layout_row=0x7f010007;
+        public static int layout_row=0x7f010007;
         /** 
         The row span: the difference between the bottom and top
         boundaries delimiting the group of cells occupied by this view.
@@ -150,7 +146,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int layout_rowSpan=0x7f010008;
+        public static int layout_rowSpan=0x7f010008;
         /** 
               support versions. All attributes not present in ViewGroup/View are
               redefined in the support library namespace.
@@ -175,7 +171,7 @@ containing a value of this type.
 <tr><td><code>vertical</code></td><td>1</td><td> Defines a vertical widget. </td></tr>
 </table>
          */
-        public static final int orientation=0x7f010000;
+        public static int orientation=0x7f010000;
         /**  The maximum number of rows to create when automatically positioning children. 
          <p>Must be an integer value, such as "<code>100</code>".
 <p>This may also be a reference to a resource (in the form
@@ -184,7 +180,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int rowCount=0x7f010001;
+        public static int rowCount=0x7f010001;
         /** 
         When set to true, forces row boundaries to appear in the same order
         as row indices.
@@ -198,7 +194,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int rowOrderPreserved=0x7f010005;
+        public static int rowOrderPreserved=0x7f010005;
         /** 
         When set to true, tells GridLayout to use default margins when none are specified
         in a view's layout parameters.
@@ -212,201 +208,32 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int useDefaultMargins=0x7f010003;
+        public static int useDefaultMargins=0x7f010003;
     }
     public static final class dimen {
-        /**  Default screen margins, per the Android Design guidelines. 
-         */
-        public static final int activity_horizontal_margin=0x7f060001;
-        public static final int activity_vertical_margin=0x7f060002;
         /**  The default gap between components in a layout. 
          */
-        public static final int default_gap=0x7f060000;
-    }
-    public static final class drawable {
-        public static final int arrowclose=0x7f020000;
-        public static final int arrowopen=0x7f020001;
-        public static final int camera=0x7f020002;
-        public static final int comment=0x7f020003;
-        public static final int content_discard=0x7f020004;
-        public static final int content_edit=0x7f020005;
-        public static final int device_access_camera=0x7f020006;
-        public static final int device_access_mic=0x7f020007;
-        public static final int device_access_video=0x7f020008;
-        public static final int ic_launcher=0x7f020009;
-        public static final int marker=0x7f02000a;
-        public static final int menu=0x7f02000b;
-        public static final int mic=0x7f02000c;
-        public static final int navigation_cancel=0x7f02000d;
-        public static final int video=0x7f02000e;
+        public static int default_gap=0x7f030000;
     }
     public static final class id {
-<<<<<<< HEAD
-        public static final int Date=0x7f0a0019;
-        public static final int FrameLayout1=0x7f0a0015;
-        public static final int LinearLayout1=0x7f0a0008;
-        public static final int audioButton=0x7f0a001f;
-        public static final int btnAppSet=0x7f0a0026;
-        public static final int btnBackMap=0x7f0a0027;
-        public static final int btnExport=0x7f0a0028;
-        public static final int button1=0x7f0a000a;
-        public static final int button2=0x7f0a0024;
-        public static final int button3=0x7f0a0025;
-        public static final int button4=0x7f0a0001;
-        public static final int button5=0x7f0a0002;
-        public static final int button6=0x7f0a0006;
-        public static final int button_edit=0x7f0a0000;
-        public static final int button_export=0x7f0a0003;
-        public static final int button_menu=0x7f0a0005;
-        public static final int closeButton=0x7f0a001a;
-        public static final int comment=0x7f0a001b;
-        public static final int content=0x7f0a000c;
-        public static final int deleteAudio=0x7f0a0023;
-        public static final int deleteButtons=0x7f0a0020;
-        public static final int deletePicture=0x7f0a0022;
-        public static final int deleteVideo=0x7f0a0021;
-        public static final int drawerButtonAudio=0x7f0a0014;
-        public static final int drawerButtonCamera=0x7f0a0012;
-        public static final int drawerButtonComment=0x7f0a0011;
-        public static final int drawerButtonMarker=0x7f0a0010;
-        public static final int drawerButtonMenu=0x7f0a000f;
-        public static final int drawerButtonVideo=0x7f0a0013;
-        public static final int editText1=0x7f0a0007;
-        public static final int expandableListView1=0x7f0a0009;
-        public static final int fragment1=0x7f0a0004;
-        public static final int handle=0x7f0a000d;
-        public static final int map=0x7f0a0029;
-        public static final int markerTitle=0x7f0a0018;
-        public static final int mediaButtons=0x7f0a001c;
-        public static final int menu_settings=0x7f0a002a;
-        public static final int pictureButton=0x7f0a001e;
-        public static final int slidingDrawer1=0x7f0a000b;
-        public static final int titleAndTime=0x7f0a0017;
-        public static final int togglebutton=0x7f0a000e;
-        public static final int trashButton=0x7f0a0016;
-        public static final int videoButton=0x7f0a001d;
-=======
-        public static final int Date=0x7f05002b;
-        public static final int FrameLayout1=0x7f050027;
-        public static final int LinearLayout1=0x7f05001a;
-        public static final int alignBounds=0x7f050002;
-        public static final int alignMargins=0x7f050003;
-        public static final int audioButton=0x7f050031;
-        public static final int bottom=0x7f050005;
-        public static final int btnAppSet=0x7f050038;
-        public static final int btnBackMap=0x7f050039;
-        public static final int btnExport=0x7f05003a;
-        public static final int button1=0x7f05001c;
-        public static final int button2=0x7f050036;
-        public static final int button3=0x7f050037;
-        public static final int button4=0x7f050013;
-        public static final int button5=0x7f050014;
-        public static final int button6=0x7f050018;
-        public static final int button_edit=0x7f050012;
-        public static final int button_export=0x7f050015;
-        public static final int button_menu=0x7f050017;
-        public static final int center=0x7f05000c;
-        public static final int center_horizontal=0x7f05000a;
-        public static final int center_vertical=0x7f050008;
-        public static final int clip_horizontal=0x7f05000f;
-        public static final int clip_vertical=0x7f05000e;
-        public static final int closeButton=0x7f05002c;
-        public static final int comment=0x7f05002d;
-        public static final int content=0x7f05001e;
-        public static final int deleteAudio=0x7f050035;
-        public static final int deleteButtons=0x7f050032;
-        public static final int deletePicture=0x7f050034;
-        public static final int deleteVideo=0x7f050033;
-        public static final int dialogButtonConfirm=0x7f05003c;
-        public static final int drawerButtonAudio=0x7f050026;
-        public static final int drawerButtonCamera=0x7f050024;
-        public static final int drawerButtonComment=0x7f050023;
-        public static final int drawerButtonMarker=0x7f050022;
-        public static final int drawerButtonMenu=0x7f050021;
-        public static final int drawerButtonVideo=0x7f050025;
-        public static final int editText1=0x7f050019;
-        public static final int end=0x7f050011;
-        public static final int expandableListView1=0x7f05001b;
-        public static final int fill=0x7f05000d;
-        public static final int fill_horizontal=0x7f05000b;
-        public static final int fill_vertical=0x7f050009;
-        public static final int fragment1=0x7f050016;
-        public static final int handle=0x7f05001f;
-        public static final int horizontal=0x7f050000;
-        public static final int left=0x7f050006;
-        public static final int markerTitle=0x7f05002a;
-        public static final int mediaButtons=0x7f05002e;
-        public static final int menu_settings=0x7f05003d;
-        public static final int pictureButton=0x7f050030;
-        public static final int right=0x7f050007;
-        public static final int slidingDrawer1=0x7f05001d;
-        public static final int start=0x7f050010;
-        public static final int text=0x7f05003b;
-        public static final int titleAndTime=0x7f050029;
-        public static final int togglebutton=0x7f050020;
-        public static final int top=0x7f050004;
-        public static final int trashButton=0x7f050028;
-        public static final int vertical=0x7f050001;
-        public static final int videoButton=0x7f05002f;
->>>>>>> 5a2f59b861349e212dc2784e897375ea22ab3517
-    }
-    public static final class layout {
-        public static final int activity_edit=0x7f030000;
-        public static final int activity_export=0x7f030001;
-        public static final int activity_main=0x7f030002;
-        public static final int activity_marker_details=0x7f030003;
-        public static final int activity_menu=0x7f030004;
-        public static final int activity_menu2=0x7f030005;
-<<<<<<< HEAD
-        public static final int fragment_map=0x7f030006;
-=======
-        public static final int alert_dialog=0x7f030006;
->>>>>>> 5a2f59b861349e212dc2784e897375ea22ab3517
-    }
-    public static final class menu {
-        public static final int activity_main=0x7f0a0000;
-    }
-    public static final class string {
-        public static final int action_settings=0x7f080006;
-        public static final int app_name=0x7f080000;
-        public static final int confirm=0x7f080008;
-        public static final int hello_world=0x7f080001;
-        public static final int marker_date=0x7f080004;
-        public static final int marker_title=0x7f080003;
-        public static final int menu_settings=0x7f080002;
-        public static final int title_activity_settings=0x7f080005;
-        public static final int tracking=0x7f080007;
-    }
-    public static final class style {
-        /** 
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    
-
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        
-
-        Base application theme for API 11+. This theme completely replaces
-        AppBaseTheme from res/values/styles.xml on API 11+ devices.
-    
- API 11 theme customizations can go here. 
-
-        Base application theme for API 14+. This theme completely replaces
-        AppBaseTheme from BOTH res/values/styles.xml and
-        res/values-v11/styles.xml on API 14+ devices.
-    
- API 14 theme customizations can go here. 
-         */
-        public static final int AppBaseTheme=0x7f090000;
-        /**  Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
-         */
-        public static final int AppTheme=0x7f090001;
-    }
-    public static final class xml {
-        public static final int prefs=0x7f040000;
+        public static int alignBounds=0x7f020002;
+        public static int alignMargins=0x7f020003;
+        public static int bottom=0x7f020005;
+        public static int center=0x7f02000c;
+        public static int center_horizontal=0x7f02000a;
+        public static int center_vertical=0x7f020008;
+        public static int clip_horizontal=0x7f02000f;
+        public static int clip_vertical=0x7f02000e;
+        public static int end=0x7f020011;
+        public static int fill=0x7f02000d;
+        public static int fill_horizontal=0x7f02000b;
+        public static int fill_vertical=0x7f020009;
+        public static int horizontal=0x7f020000;
+        public static int left=0x7f020006;
+        public static int right=0x7f020007;
+        public static int start=0x7f020010;
+        public static int top=0x7f020004;
+        public static int vertical=0x7f020001;
     }
     public static final class styleable {
         /** Attributes that can be used with a GridLayout.
@@ -415,20 +242,20 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #GridLayout_alignmentMode com.example.maptracker:alignmentMode}</code></td><td>
+           <tr><td><code>{@link #GridLayout_alignmentMode android.support.v7.gridlayout:alignmentMode}</code></td><td>
         When set to alignMargins, causes alignment to take place between the outer
         boundary of a view, as defined by its margins.</td></tr>
-           <tr><td><code>{@link #GridLayout_columnCount com.example.maptracker:columnCount}</code></td><td> The maximum number of columns to create when automatically positioning children.</td></tr>
-           <tr><td><code>{@link #GridLayout_columnOrderPreserved com.example.maptracker:columnOrderPreserved}</code></td><td>
+           <tr><td><code>{@link #GridLayout_columnCount android.support.v7.gridlayout:columnCount}</code></td><td> The maximum number of columns to create when automatically positioning children.</td></tr>
+           <tr><td><code>{@link #GridLayout_columnOrderPreserved android.support.v7.gridlayout:columnOrderPreserved}</code></td><td>
         When set to true, forces column boundaries to appear in the same order
         as column indices.</td></tr>
-           <tr><td><code>{@link #GridLayout_orientation com.example.maptracker:orientation}</code></td><td>
+           <tr><td><code>{@link #GridLayout_orientation android.support.v7.gridlayout:orientation}</code></td><td>
               support versions.</td></tr>
-           <tr><td><code>{@link #GridLayout_rowCount com.example.maptracker:rowCount}</code></td><td> The maximum number of rows to create when automatically positioning children.</td></tr>
-           <tr><td><code>{@link #GridLayout_rowOrderPreserved com.example.maptracker:rowOrderPreserved}</code></td><td>
+           <tr><td><code>{@link #GridLayout_rowCount android.support.v7.gridlayout:rowCount}</code></td><td> The maximum number of rows to create when automatically positioning children.</td></tr>
+           <tr><td><code>{@link #GridLayout_rowOrderPreserved android.support.v7.gridlayout:rowOrderPreserved}</code></td><td>
         When set to true, forces row boundaries to appear in the same order
         as row indices.</td></tr>
-           <tr><td><code>{@link #GridLayout_useDefaultMargins com.example.maptracker:useDefaultMargins}</code></td><td>
+           <tr><td><code>{@link #GridLayout_useDefaultMargins android.support.v7.gridlayout:useDefaultMargins}</code></td><td>
         When set to true, tells GridLayout to use default margins when none are specified
         in a view's layout parameters.</td></tr>
            </table>
@@ -608,33 +435,33 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #GridLayout_Layout_android_layout_height com.example.maptracker:android_layout_height}</code></td><td></td></tr>
-           <tr><td><code>{@link #GridLayout_Layout_android_layout_margin com.example.maptracker:android_layout_margin}</code></td><td>
+           <tr><td><code>{@link #GridLayout_Layout_android_layout_height android.support.v7.gridlayout:android_layout_height}</code></td><td></td></tr>
+           <tr><td><code>{@link #GridLayout_Layout_android_layout_margin android.support.v7.gridlayout:android_layout_margin}</code></td><td>
               Specifies extra space on the left, top, right and bottom
               sides of this view.</td></tr>
-           <tr><td><code>{@link #GridLayout_Layout_android_layout_marginBottom com.example.maptracker:android_layout_marginBottom}</code></td><td>
+           <tr><td><code>{@link #GridLayout_Layout_android_layout_marginBottom android.support.v7.gridlayout:android_layout_marginBottom}</code></td><td>
               Specifies extra space on the bottom side of this view.</td></tr>
-           <tr><td><code>{@link #GridLayout_Layout_android_layout_marginLeft com.example.maptracker:android_layout_marginLeft}</code></td><td>
+           <tr><td><code>{@link #GridLayout_Layout_android_layout_marginLeft android.support.v7.gridlayout:android_layout_marginLeft}</code></td><td>
               Specifies extra space on the left side of this view.</td></tr>
-           <tr><td><code>{@link #GridLayout_Layout_android_layout_marginRight com.example.maptracker:android_layout_marginRight}</code></td><td>
+           <tr><td><code>{@link #GridLayout_Layout_android_layout_marginRight android.support.v7.gridlayout:android_layout_marginRight}</code></td><td>
               Specifies extra space on the right side of this view.</td></tr>
-           <tr><td><code>{@link #GridLayout_Layout_android_layout_marginTop com.example.maptracker:android_layout_marginTop}</code></td><td>
+           <tr><td><code>{@link #GridLayout_Layout_android_layout_marginTop android.support.v7.gridlayout:android_layout_marginTop}</code></td><td>
               Specifies extra space on the top side of this view.</td></tr>
-           <tr><td><code>{@link #GridLayout_Layout_android_layout_width com.example.maptracker:android_layout_width}</code></td><td>
+           <tr><td><code>{@link #GridLayout_Layout_android_layout_width android.support.v7.gridlayout:android_layout_width}</code></td><td>
               support versions.</td></tr>
-           <tr><td><code>{@link #GridLayout_Layout_layout_column com.example.maptracker:layout_column}</code></td><td>
+           <tr><td><code>{@link #GridLayout_Layout_layout_column android.support.v7.gridlayout:layout_column}</code></td><td>
         The column boundary delimiting the left of the group of cells
         occupied by this view.</td></tr>
-           <tr><td><code>{@link #GridLayout_Layout_layout_columnSpan com.example.maptracker:layout_columnSpan}</code></td><td>
+           <tr><td><code>{@link #GridLayout_Layout_layout_columnSpan android.support.v7.gridlayout:layout_columnSpan}</code></td><td>
         The column span: the difference between the right and left
         boundaries delimiting the group of cells occupied by this view.</td></tr>
-           <tr><td><code>{@link #GridLayout_Layout_layout_gravity com.example.maptracker:layout_gravity}</code></td><td>
+           <tr><td><code>{@link #GridLayout_Layout_layout_gravity android.support.v7.gridlayout:layout_gravity}</code></td><td>
         Gravity specifies how a component should be placed in its group of cells.</td></tr>
-           <tr><td><code>{@link #GridLayout_Layout_layout_row com.example.maptracker:layout_row}</code></td><td> END MarginLayout layoutparams 
+           <tr><td><code>{@link #GridLayout_Layout_layout_row android.support.v7.gridlayout:layout_row}</code></td><td> END MarginLayout layoutparams 
 
         The row boundary delimiting the top of the group of cells
         occupied by this view.</td></tr>
-           <tr><td><code>{@link #GridLayout_Layout_layout_rowSpan com.example.maptracker:layout_rowSpan}</code></td><td>
+           <tr><td><code>{@link #GridLayout_Layout_layout_rowSpan android.support.v7.gridlayout:layout_rowSpan}</code></td><td>
         The row span: the difference between the bottom and top
         boundaries delimiting the group of cells occupied by this view.</td></tr>
            </table>
@@ -657,7 +484,7 @@ containing a value of this type.
             0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b
         };
         /**
-          <p>This symbol is the offset where the {@link com.example.maptracker.R.attr#android_layout_height}
+          <p>This symbol is the offset where the {@link android.support.v7.gridlayout.R.attr#android_layout_height}
           attribute's value can be found in the {@link #GridLayout_Layout} array.
           @attr name android:android_layout_height
         */
@@ -669,7 +496,7 @@ containing a value of this type.
               Specifies extra space on the left, top, right and bottom
               sides of this view. This space is outside this view's bounds.
         
-          <p>This corresponds to the global attribute          resource symbol {@link com.example.maptracker.R.attr#android_layout_margin}.
+          <p>This corresponds to the global attribute          resource symbol {@link android.support.v7.gridlayout.R.attr#android_layout_margin}.
           @attr name android:android_layout_margin
         */
         public static final int GridLayout_Layout_android_layout_margin = 2;
@@ -680,7 +507,7 @@ containing a value of this type.
               Specifies extra space on the bottom side of this view.
               This space is outside this view's bounds.
         
-          <p>This corresponds to the global attribute          resource symbol {@link com.example.maptracker.R.attr#android_layout_marginBottom}.
+          <p>This corresponds to the global attribute          resource symbol {@link android.support.v7.gridlayout.R.attr#android_layout_marginBottom}.
           @attr name android:android_layout_marginBottom
         */
         public static final int GridLayout_Layout_android_layout_marginBottom = 6;
@@ -691,7 +518,7 @@ containing a value of this type.
               Specifies extra space on the left side of this view.
               This space is outside this view's bounds.
         
-          <p>This corresponds to the global attribute          resource symbol {@link com.example.maptracker.R.attr#android_layout_marginLeft}.
+          <p>This corresponds to the global attribute          resource symbol {@link android.support.v7.gridlayout.R.attr#android_layout_marginLeft}.
           @attr name android:android_layout_marginLeft
         */
         public static final int GridLayout_Layout_android_layout_marginLeft = 3;
@@ -702,7 +529,7 @@ containing a value of this type.
               Specifies extra space on the right side of this view.
               This space is outside this view's bounds.
         
-          <p>This corresponds to the global attribute          resource symbol {@link com.example.maptracker.R.attr#android_layout_marginRight}.
+          <p>This corresponds to the global attribute          resource symbol {@link android.support.v7.gridlayout.R.attr#android_layout_marginRight}.
           @attr name android:android_layout_marginRight
         */
         public static final int GridLayout_Layout_android_layout_marginRight = 5;
@@ -713,7 +540,7 @@ containing a value of this type.
               Specifies extra space on the top side of this view.
               This space is outside this view's bounds.
         
-          <p>This corresponds to the global attribute          resource symbol {@link com.example.maptracker.R.attr#android_layout_marginTop}.
+          <p>This corresponds to the global attribute          resource symbol {@link android.support.v7.gridlayout.R.attr#android_layout_marginTop}.
           @attr name android:android_layout_marginTop
         */
         public static final int GridLayout_Layout_android_layout_marginTop = 4;
@@ -725,7 +552,7 @@ containing a value of this type.
               redefined in the support library name space.
         
  START MarginLayout layoutparams 
-          <p>This corresponds to the global attribute          resource symbol {@link com.example.maptracker.R.attr#android_layout_width}.
+          <p>This corresponds to the global attribute          resource symbol {@link android.support.v7.gridlayout.R.attr#android_layout_width}.
           @attr name android:android_layout_width
         */
         public static final int GridLayout_Layout_android_layout_width = 0;
