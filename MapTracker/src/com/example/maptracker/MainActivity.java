@@ -418,6 +418,7 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				// Image captured and saved to fileUri specified in the Intent
+				saveDataInMarker(data,CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 				Toast.makeText(this, "Image saved to:\n" +
 						data.getData(), Toast.LENGTH_LONG).show();
 			} else if (resultCode == RESULT_CANCELED) {
@@ -430,14 +431,30 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 		if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 				// Video captured and saved to fileUri specified in the Intent
+				saveDataInMarker(data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
 				Toast.makeText(this, "Video saved to:\n" +
-						data.getData(), Toast.LENGTH_LONG).show();
+						data.getData().toString(), Toast.LENGTH_LONG).show();
 			} else if (resultCode == RESULT_CANCELED) {
 				// User cancelled the video capture
 			} else {
 				// Video capture failed, advise user
 			}
 		}
+	}
+
+	private void saveDataInMarker(Intent data, int code) {
+		DBMarker newMarker = new DBMarker();
+		newMarker.timeStamp = System.currentTimeMillis();
+		
+		if (code == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE){
+			newMarker.pictureLink = data.getData().toString();
+		}
+		else if (code == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE){
+			newMarker.videoLink = data.getData().toString();
+		}
+
+		createMarker(newMarker);
+
 	}
 
 	@Override
