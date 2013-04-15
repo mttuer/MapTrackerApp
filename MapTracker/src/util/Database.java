@@ -29,7 +29,7 @@ public class Database implements TrackerDB{
 	"picPath TEXT, vidPath TEXT, audioPath TEXT, comment TEXT, time INTEGER, longitude "+
 	"INTEGER, latitude INTEGER)";
 
-	static final String tbRoute = "CREATE TABLE TB_ROUTES IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED INTEGER, routeID INTEGER, name TEXT,notes TEXT, location TEXT, "+
+	static final String tbRoute = "CREATE TABLE TB_ROUTES IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED INTEGER, name TEXT,notes TEXT, location TEXT, "+
 	"startTime INTEGER, endTime INTEGER, countDataPoints INTEGER)";
 	static final String DATABASE_NAME = "DB_TRACKER";
 	static final int DATABASE_VERSION = 1;
@@ -122,9 +122,9 @@ public class Database implements TrackerDB{
 		
 		while(c.moveToNext()){
 			GPS g = new GPS();
-			g.latitude = c.getDouble(1);
-			g.longitude = c.getDouble(2);
-			g.time = c.getLong(3);
+			g.latitude = c.getDouble(0);
+			g.longitude = c.getDouble(1);
+			g.time = c.getLong(2);
 			g.routeID = routeID;
 			gps.add(g);
 		}
@@ -201,20 +201,20 @@ public class Database implements TrackerDB{
 	public List<DBRoute> getAllRoutes() {
 		LinkedList<DBRoute> routes = new LinkedList<DBRoute>();
 		
-		Cursor c = db.query("TB_ROUTES", new String[]{"routeID","startTime",
-				"endStart","notes","routeName","location","countDataPoints"}, null, null, null, null, null);
+		Cursor c = db.query("TB_ROUTES", new String[]{"_ID","startTime",
+				"endTime","notes","name","location","countDataPoints"}, null, null, null, null, null);
 		c.moveToFirst();
 		c.moveToPrevious();
 		
 		while(c.moveToNext()){
 			DBRoute r = new DBRoute();
-			r.routeID = c.getLong(1);
-			r.timeStart = c.getLong(2);
-			r.timeEnd = c.getLong(3);
-			r.notes = c.getString(4);
-			r.routeName = c.getString(5);
-			r.location = c.getString(6);
-			r.countDataPoints = c.getInt(7);
+			r.routeID = c.getLong(0);
+			r.timeStart = c.getLong(1);
+			r.timeEnd = c.getLong(2);
+			r.notes = c.getString(3);
+			r.routeName = c.getString(4);
+			r.location = c.getString(5);
+			r.countDataPoints = c.getInt(6);
 			routes.add(r);
 		}
 		
@@ -223,18 +223,18 @@ public class Database implements TrackerDB{
 
 	@Override
 	public DBRoute getRoute(long routeID) {
-		Cursor c = db.query("TB_ROUTES", new String[]{"routeID","startTime",
-				"endTime","notes","routeName","location","countDataPoints"},
+		Cursor c = db.query("TB_ROUTES", new String[]{"_ID","startTime",
+				"endTime","notes","name","location","countDataPoints"},
 				"_ID = " + routeID, null, null, null, null, null);
 		c.moveToFirst();
 		DBRoute r = new DBRoute();
-		r.routeID = c.getLong(1);
-		r.timeStart = c.getLong(2);
-		r.timeEnd = c.getLong(3);
-		r.notes = c.getString(4);
-		r.routeName = c.getString(5);
-		r.location = c.getString(6);
-		r.countDataPoints = c.getInt(7);
+		r.routeID = c.getLong(0);
+		r.timeStart = c.getLong(1);
+		r.timeEnd = c.getLong(2);
+		r.notes = c.getString(3);
+		r.routeName = c.getString(4);
+		r.location = c.getString(5);
+		r.countDataPoints = c.getInt(6);
 		
 		return r;
 	}
@@ -285,16 +285,16 @@ public class Database implements TrackerDB{
 		while(c.moveToNext()){
 			DBMarker m = new DBMarker();
 			GPS gps = new GPS();
-			m.markerID = c.getLong(1);
-			m.routeID = c.getLong(2);
-			m.pictureLink = c.getString(3);
-			m.videoLink = c.getString(4);
-			m.audioLink = c.getString(5);
-			m.text = c.getString(6);
-			m.timeStamp = c.getLong(7);
-			gps.latitude = c.getDouble(8);
-			gps.longitude = c.getDouble(9);
-			gps.GPS_ID = c.getLong(10);
+			m.markerID = c.getLong(0);
+			m.routeID = c.getLong(1);
+			m.pictureLink = c.getString(2);
+			m.videoLink = c.getString(3);
+			m.audioLink = c.getString(4);
+			m.text = c.getString(5);
+			m.timeStamp = c.getLong(6);
+			gps.latitude = c.getDouble(7);
+			gps.longitude = c.getDouble(8);
+			gps.GPS_ID = c.getLong(9);
 			m.gps = gps;
 			markers.add(m);
 		}
@@ -311,16 +311,16 @@ public class Database implements TrackerDB{
 		c.moveToFirst();
 		DBMarker m = new DBMarker();
 		GPS gps = new GPS();
-		m.markerID = c.getLong(1);
-		m.routeID = c.getLong(2);
-		m.pictureLink = c.getString(3);
-		m.videoLink = c.getString(4);
-		m.audioLink = c.getString(5);
-		m.text = c.getString(6);
-		m.timeStamp = c.getLong(7);
-		gps.latitude = c.getDouble(8);
-		gps.longitude = c.getDouble(9);
-		gps.GPS_ID = c.getLong(10);
+		m.markerID = c.getLong(0);
+		m.routeID = c.getLong(1);
+		m.pictureLink = c.getString(2);
+		m.videoLink = c.getString(3);
+		m.audioLink = c.getString(4);
+		m.text = c.getString(5);
+		m.timeStamp = c.getLong(6);
+		gps.latitude = c.getDouble(7);
+		gps.longitude = c.getDouble(8);
+		gps.GPS_ID = c.getLong(9);
 		m.gps = gps;
 		
 		

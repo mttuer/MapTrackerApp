@@ -25,6 +25,7 @@
         <activity android:name="com.example.maptracker.EditActivity"></activity>
         <activity android:name="com.example.maptracker.MenuActivity"></activity>
         <activity android:name="com.example.maptracker.ExportActivity"></activity>
+        <activity android:name="com.example.maptracker.SettingsActivity"></activity>
     </application>
 
 </manifest>

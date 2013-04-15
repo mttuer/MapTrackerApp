@@ -19,6 +19,7 @@ import android.text.InputType;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -140,6 +141,7 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 	}
 
 	static View getExportButtonView(Context ctx){
+		LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		LinearLayout vl = new LinearLayout(ctx);
 		vl.setOrientation(LinearLayout.VERTICAL);
 		Button b1 = new Button(ctx);
@@ -162,18 +164,18 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 		LinearLayout hz2 = new LinearLayout(ctx);
 
 		hz1.setOrientation(LinearLayout.HORIZONTAL);
-		hz1.addView(b1);
-		hz1.addView(b2);
-		hz1.addView(b3);
-		hz1.addView(b4);
+		hz1.addView(b1,lp);
+		hz1.addView(b2,lp);
+		hz1.addView(b3,lp);
+		hz1.addView(b4,lp);
 		hz2.setOrientation(LinearLayout.HORIZONTAL);
-		hz2.addView(tv1);
-		hz2.addView(tv2);
-		hz2.addView(tv3);
-		hz2.addView(tv4);
+		hz2.addView(tv1,lp);
+		hz2.addView(tv2,lp);
+		hz2.addView(tv3,lp);
+		hz2.addView(tv4,lp);
 		
-		vl.addView(hz1);
-		vl.addView(hz2);
+		vl.addView(hz1,lp);
+		vl.addView(hz2,lp);
 		
 		return vl;
 	}
