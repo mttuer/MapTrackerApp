@@ -57,18 +57,10 @@ public class MarkerDetails extends Activity {
 
 	public void passMarker(DBMarker marker){
 		theMarker = marker;
-	}
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_marker_details);
-
 		initializeMarkerDetailsButtons();
 		initializeMarkerDetailsText();
 		setListeners();
-		//TODO setVisible(true);
-
+		setVisible(true);
 	}
 
 	private void initializeMarkerDetailsText() {
