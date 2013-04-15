@@ -40,6 +40,16 @@ public class MarkerDetails extends Activity {
 		videoButton = (ImageButton) findViewById(R.id.videoButton);
 		audioButton = (ImageButton) findViewById(R.id.audioButton);
 	}
+	
+	private void buttonVisability(){
+		
+		deletePhoto.setVisibility(theMarker.hasPic()? 0:1);
+		deleteVideo.setVisibility(theMarker.hasVid()? 0:1);;
+		deleteAudio.setVisibility(theMarker.hasAudio()? 0:1);;
+		pictureButton.setAlpha(theMarker.hasPic()? (float)1:(float)0.5);
+		videoButton.setAlpha(theMarker.hasVid()? (float)1:(float)0.5);
+		audioButton.setAlpha(theMarker.hasAudio()? (float)1:(float)0.5);
+	}
 
 	public void passMarker(DBMarker marker){
 		theMarker = marker;
@@ -64,7 +74,7 @@ public class MarkerDetails extends Activity {
 	private void initializeMarkerDetailsText() {
 		markerTitleText = (TextView) findViewById(R.id.markerTitle);
 		markerDateText = (TextView) findViewById(R.id.markerDate);
-		markerTitleText.setText(theMarker.title);
+		markerTitleText.setText("theMarker.title");
 		markerDateText.setText(theMarker.text);
 		commentText = (TextView) findViewById(R.id.comment);
 	}
@@ -214,11 +224,11 @@ public class MarkerDetails extends Activity {
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.marker_details, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.marker_details, menu);
+//		return true;
+//	}
 
 }
