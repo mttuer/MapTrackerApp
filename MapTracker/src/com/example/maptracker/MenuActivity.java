@@ -36,7 +36,7 @@ public class MenuActivity extends Activity{
 
 				case R.id.btnBackMap:
 					intent = new Intent(MenuActivity.this,
-							MainActivity.class);
+							MainActivity2.class);
 					startActivity(intent);
 					break;
 					

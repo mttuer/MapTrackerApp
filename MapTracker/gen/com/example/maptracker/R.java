@@ -71,9 +71,10 @@ public final class R {
         public static final int expandableListView1=0x7f0a0009;
         public static final int fragment1=0x7f0a0004;
         public static final int handle=0x7f0a000d;
+        public static final int map=0x7f0a0029;
         public static final int markerTitle=0x7f0a0018;
         public static final int mediaButtons=0x7f0a001c;
-        public static final int menu_settings=0x7f0a0029;
+        public static final int menu_settings=0x7f0a002a;
         public static final int pictureButton=0x7f0a001e;
         public static final int slidingDrawer1=0x7f0a000b;
         public static final int titleAndTime=0x7f0a0017;
@@ -88,6 +89,7 @@ public final class R {
         public static final int activity_marker_details=0x7f030003;
         public static final int activity_menu=0x7f030004;
         public static final int activity_menu2=0x7f030005;
+        public static final int fragment_map=0x7f030006;
     }
     public static final class menu {
         public static final int activity_main=0x7f090000;
