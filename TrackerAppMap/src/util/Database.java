@@ -21,14 +21,15 @@ import android.util.Log;
 public class Database implements TrackerDB{
 	SQLiteDatabase db;
 	static final String DatabaseName = "DB_TRACKER";
-	static final String tbGPS = "CREATE TABLE TB_GPS_DATA (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, " +
+	
+	static final String tbGPS = "CREATE TABLE TB_GPS_DATA IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, " +
 					"time INTEGER, latitude REAL, longitude REAL)";
 	
-	static final String tbMarker = "CREATE TABLE TB_MARKER_DATA (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, gpsID INTEGER, " +
+	static final String tbMarker = "CREATE TABLE TB_MARKER_DATA  IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, gpsID INTEGER, " +
 	"picPath TEXT, vidPath TEXT, audioPath TEXT, comment TEXT, time INTEGER, longitude "+
 	"INTEGER, latitude INTEGER)";
 
-	static final String tbRoute = "CREATE TABLE TB_ROUTES (_ID INTEGER PRIMARY KEY, _UPLOADED INTEGER, routeID INTEGER, name TEXT,notes TEXT, location TEXT, "+
+	static final String tbRoute = "CREATE TABLE TB_ROUTES IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED INTEGER, routeID INTEGER, name TEXT,notes TEXT, location TEXT, "+
 	"startTime INTEGER, endTime INTEGER, countDataPoints INTEGER)";
 	static final String DATABASE_NAME = "DB_TRACKER";
 	static final int DATABASE_VERSION = 1;
@@ -70,9 +71,9 @@ public class Database implements TrackerDB{
         @Override
         public void onCreate(SQLiteDatabase db) {
            // db.execSQL(DATABASE_CREATE);
-        	db.execSQL("DROP TABLE IF EXISTS TB_MARKER_DATA");
-        	db.execSQL("DROP TABLE IF EXISTS TB_GPS_DATA");
-        	db.execSQL("DROP TABLE IF EXISTS TB_ROUTES");
+        	db.execSQL("DROP TABLE TB_MARKER_DATA");
+        	db.execSQL("DROP TABLE TB_GPS_DATA");
+        	db.execSQL("DROP TABLE TB_ROUTES");
             db.execSQL(tbGPS);
             db.execSQL(tbMarker);
             db.execSQL(tbRoute);
@@ -142,12 +143,12 @@ public class Database implements TrackerDB{
 	}
 
 	@Override
-	public long addNewRoute(List<GPS> gps, List<DBMarker> markers, Long timeStart,
-			Long timeEnd, String notes, String routeName, String location) {
+	public long addNewRoute(List<GPS> gps, List<DBMarker> markers, Long startTime,
+			Long endTime, String notes, String routeName, String location) {
 		
 		ContentValues cv = new ContentValues();
-		cv.put("timeStart", timeStart);
-		cv.put("timeEnd", timeEnd);
+		cv.put("startTime", startTime);
+		cv.put("endTime", endTime);
 		if(routeName != null)
 			cv.put("name", routeName);
 		if(location != null)
@@ -163,14 +164,14 @@ public class Database implements TrackerDB{
 
 	@Override
 	public boolean editRoute(long routeID, List<GPS> gps, List<DBMarker> markers,
-			Long timeStart, Long timeEnd, String notes, String routeName, String location) {
+			Long startTime, Long endTime, String notes, String routeName, String location) {
 		boolean truth = true;
 		
 		ContentValues cv = new ContentValues();
-		if(timeStart != null)
-			cv.put("timeStart", timeStart);
-		if(timeEnd != null)
-			cv.put("timeEnd", timeEnd);
+		if(startTime != null)
+			cv.put("startTime", startTime);
+		if(endTime != null)
+			cv.put("endTime", endTime);
 		if(routeName != null)
 			cv.put("name", routeName);
 		if(location != null)
@@ -201,19 +202,19 @@ public class Database implements TrackerDB{
 		LinkedList<DBRoute> routes = new LinkedList<DBRoute>();
 		
 		Cursor c = db.query("TB_ROUTES", new String[]{"routeID","startTime",
-				"endTime","notes","routeName","location","countDataPoints"}, null, null, null, null, null);
+				"endTime","notes","name","location","countDataPoints"}, null, null, null, null, null);
 		c.moveToFirst();
 		c.moveToPrevious();
 		
 		while(c.moveToNext()){
 			DBRoute r = new DBRoute();
-			r.routeID = c.getLong(1);
-			r.timeStart = c.getLong(2);
-			r.timeEnd = c.getLong(3);
-			r.notes = c.getString(4);
-			r.routeName = c.getString(5);
-			r.location = c.getString(6);
-			r.countDataPoints = c.getInt(7);
+			r.routeID = c.getLong(0);
+			r.timeStart = c.getLong(1);
+			r.timeEnd = c.getLong(2);
+			r.notes = c.getString(3);
+			r.routeName = c.getString(4);
+			r.location = c.getString(5);
+			r.countDataPoints = c.getInt(6);
 			routes.add(r);
 		}
 		
@@ -222,18 +223,18 @@ public class Database implements TrackerDB{
 
 	@Override
 	public DBRoute getRoute(long routeID) {
-		Cursor c = db.query("TB_ROUTES", new String[]{"routeID","timeStart",
-				"timeEnd","notes","routeName","location","countDataPoints"},
+		Cursor c = db.query("TB_ROUTES", new String[]{"routeID","startTime",
+				"endTime","notes","name","location","countDataPoints"},
 				"_ID = " + routeID, null, null, null, null, null);
 		c.moveToFirst();
 		DBRoute r = new DBRoute();
-		r.routeID = c.getLong(1);
-		r.timeStart = c.getLong(2);
-		r.timeEnd = c.getLong(3);
-		r.notes = c.getString(4);
-		r.routeName = c.getString(5);
-		r.location = c.getString(6);
-		r.countDataPoints = c.getInt(7);
+		r.routeID = c.getLong(0);
+		r.timeStart = c.getLong(1);
+		r.timeEnd = c.getLong(2);
+		r.notes = c.getString(3);
+		r.routeName = c.getString(4);
+		r.location = c.getString(5);
+		r.countDataPoints = c.getInt(6);
 		
 		return r;
 	}
@@ -284,16 +285,16 @@ public class Database implements TrackerDB{
 		while(c.moveToNext()){
 			DBMarker m = new DBMarker();
 			GPS gps = new GPS();
-			m.markerID = c.getLong(1);
-			m.routeID = c.getLong(2);
-			m.pictureLink = c.getString(3);
-			m.videoLink = c.getString(4);
-			m.audioLink = c.getString(5);
-			m.text = c.getString(6);
-			m.timeStamp = c.getLong(7);
-			gps.latitude = c.getDouble(8);
-			gps.longitude = c.getDouble(9);
-			gps.GPS_ID = c.getLong(10);
+			m.markerID = c.getLong(0);
+			m.routeID = c.getLong(1);
+			m.pictureLink = c.getString(2);
+			m.videoLink = c.getString(3);
+			m.audioLink = c.getString(4);
+			m.text = c.getString(5);
+			m.timeStamp = c.getLong(6);
+			gps.latitude = c.getDouble(7);
+			gps.longitude = c.getDouble(8);
+			gps.GPS_ID = c.getLong(9);
 			m.gps = gps;
 			markers.add(m);
 		}
@@ -310,16 +311,16 @@ public class Database implements TrackerDB{
 		c.moveToFirst();
 		DBMarker m = new DBMarker();
 		GPS gps = new GPS();
-		m.markerID = c.getLong(1);
-		m.routeID = c.getLong(2);
-		m.pictureLink = c.getString(3);
-		m.videoLink = c.getString(4);
-		m.audioLink = c.getString(5);
-		m.text = c.getString(6);
-		m.timeStamp = c.getLong(7);
-		gps.latitude = c.getDouble(8);
-		gps.longitude = c.getDouble(9);
-		gps.GPS_ID = c.getLong(10);
+		m.markerID = c.getLong(0);
+		m.routeID = c.getLong(1);
+		m.pictureLink = c.getString(2);
+		m.videoLink = c.getString(3);
+		m.audioLink = c.getString(4);
+		m.text = c.getString(5);
+		m.timeStamp = c.getLong(6);
+		gps.latitude = c.getDouble(7);
+		gps.longitude = c.getDouble(8);
+		gps.GPS_ID = c.getLong(9);
 		m.gps = gps;
 		
 		

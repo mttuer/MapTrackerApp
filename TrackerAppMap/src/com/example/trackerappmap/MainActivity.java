@@ -138,24 +138,32 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
         Location location = getLocation();
     	LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-        long startTime = location.getTime();
-       for(int i = 0; i < 5; i++)
+        long startTime = System.currentTimeMillis();
+        
+        for(int i = 0; i < 5; i++)
         {
         	//Create a new GPS object
 			GPS gpsObject = new GPS();
 			gpsObject.latitude = Math.random();
 			gpsObject.longitude = Math.random();
-			gpsObject.time = location.getTime();
+			gpsObject.time = System.currentTimeMillis();
 			gpsList.add(gpsObject);
         }
        
-		database.addNewRoute(gpsList, markerList, startTime, getLocation().getTime(), "", "Test route", "Mikes House");
+		database.addNewRoute(gpsList, markerList, startTime, System.currentTimeMillis(), "", "Test route", "Mikes House");
 
        
        List<DBRoute> routeList = database.getAllRoutes();
+       System.out.println(routeList.size() + " Routes");
        for(DBRoute route : routeList)
        {
     	   System.out.println("Route: " + route.routeID);
+    	   System.out.println("GPS Points: " + route.countDataPoints);
+    	   System.out.println("Location Name: " + route.location);
+    	   System.out.println("Route Name: " + route.routeName);
+    	   System.out.println("Start Time: " + route.timeStart);
+    	   System.out.println("End Time: " + route.timeEnd);
+    	   
     	   List<GPS> gpsPoints = database.getGPSData(route.routeID);
     	   for(GPS gps : gpsPoints)
     	   {
@@ -252,7 +260,21 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 	//Get location object
 	public Location getLocation()
 	{        
-        return locationManager.getLastKnownLocation(provider);
+		    Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		    Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		    
+		    long GPSLocationTime = 0;
+		    if (locationGPS != null)
+		    	GPSLocationTime = locationGPS.getTime();
+
+		    long NetLocationTime = 0;
+		    if (locationNet != null)
+		        NetLocationTime = locationNet.getTime();
+		    
+		    if ( 0 < GPSLocationTime - NetLocationTime )
+		        return locationGPS;
+		    else
+		        return locationNet;
 	}
 
 	//Fill in code here for what to do when Google Maps Marker is clicked
@@ -263,7 +285,6 @@ public class MainActivity extends FragmentActivity implements OnMarkerClickListe
 			return false;
 		
 		Set<DBMarker> keyList = markerHashTable.keySet();
-		DBMarker oldMarker = null;
 		DBMarker editedMarker = null;
 		
 		for(DBMarker marker : keyList)
