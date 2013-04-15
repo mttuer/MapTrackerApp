@@ -19,6 +19,7 @@ public class MarkerDetails extends Activity {
 	DBMarker theMarker;
 	TextView markerTitleText;
 	TextView markerDateText;
+	TextView commentText;
 	Button deletePhoto;
 	Button deleteVideo;
 	Button deleteAudio;
@@ -29,29 +30,14 @@ public class MarkerDetails extends Activity {
 	ImageButton audioButton;
 
 	private void initializeMarkerDetailsButtons() {
-		// Video Button
 		deleteVideo = (Button) findViewById(R.id.deleteVideo);
-
-		// Photo Button
 		//ivPicture = (ImageView) findViewById(R.id.ivPicture); // ------debug purpose
 		deletePhoto = (Button) findViewById(R.id.deletePicture);
-
-		// Audio Button
 		deleteAudio = (Button) findViewById(R.id.deleteAudio);
-
-		// Trash Button
 		trashMarker = (ImageButton) findViewById(R.id.trashButton);
-
-		// Close Button
 		closeMarker = (ImageButton) findViewById(R.id.closeButton);
-
-		// Camera Button
 		pictureButton = (ImageButton) findViewById(R.id.pictureButton);
-
-		// Video Button
 		videoButton = (ImageButton) findViewById(R.id.videoButton);
-
-		// Audio Button
 		audioButton = (ImageButton) findViewById(R.id.audioButton);
 	}
 
@@ -63,11 +49,24 @@ public class MarkerDetails extends Activity {
 		setVisible(true);
 	}
 
+	//	@Override
+	//	protected void onCreate(Bundle savedInstanceState) {
+	//		super.onCreate(savedInstanceState);
+	//		setContentView(R.layout.activity_marker_details);
+	//
+	//		initializeMarkerDetailsButtons();
+	//		initializeMarkerDetailsText();
+	//		setListeners();
+	//		setVisible(true);
+	//
+	//	}
+
 	private void initializeMarkerDetailsText() {
 		markerTitleText = (TextView) findViewById(R.id.markerTitle);
 		markerDateText = (TextView) findViewById(R.id.markerDate);
 		markerTitleText.setText(theMarker.title);
 		markerDateText.setText(theMarker.text);
+		commentText = (TextView) findViewById(R.id.comment);
 	}
 
 	private void setListeners() {
@@ -79,8 +78,20 @@ public class MarkerDetails extends Activity {
 		setDeleteVideoListener();
 		setDeletePhotoListener();
 		setDeleteAudioListener();
+		setCommentListener();
 	}
 
+
+	private void setCommentListener() {
+		// Action for Close button
+		closeMarker.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				ma.commentClicked(v);
+			}
+		});		
+	}
 
 	private void setCloseListener() {
 		// Action for Close button
@@ -99,7 +110,7 @@ public class MarkerDetails extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				
+
 			}
 		});
 	}
@@ -144,7 +155,7 @@ public class MarkerDetails extends Activity {
 	private void setDeleteVideoListener() {
 		// Action for Media button when no data
 		deleteVideo.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				theMarker.videoLink = null;
