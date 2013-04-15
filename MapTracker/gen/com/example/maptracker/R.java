@@ -38,7 +38,6 @@ public final class R {
         public static final int video=0x7f02000e;
     }
     public static final class id {
-        public static final int Date=0x7f0a001a;
         public static final int FrameLayout1=0x7f0a000b;
         public static final int LinearLayout1=0x7f0a0008;
         public static final int audioButton=0x7f0a0020;
@@ -73,6 +72,7 @@ public final class R {
         public static final int fragment1=0x7f0a0004;
         public static final int handle=0x7f0a000f;
         public static final int map=0x7f0a000c;
+        public static final int markerDate=0x7f0a001a;
         public static final int markerTitle=0x7f0a0019;
         public static final int mediaButtons=0x7f0a001d;
         public static final int menu_settings=0x7f0a002c;
