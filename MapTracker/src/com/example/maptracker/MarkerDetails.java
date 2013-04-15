@@ -66,9 +66,8 @@ public class MarkerDetails extends Activity {
 	private void initializeMarkerDetailsText() {
 		markerTitleText = (TextView) findViewById(R.id.markerTitle);
 		markerDateText = (TextView) findViewById(R.id.markerDate);
-		//TODO 
-		markerTitleText.setText("Java Title");
-		markerDateText.setText("Java Text");
+		markerTitleText.setText(theMarker.title);
+		markerDateText.setText(theMarker.text);
 	}
 
 	private void setListeners() {
