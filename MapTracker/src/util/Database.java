@@ -21,6 +21,7 @@ import android.util.Log;
 public class Database implements TrackerDB{
 	SQLiteDatabase db;
 	static final String DatabaseName = "DB_TRACKER";
+	
 	static final String tbGPS = "CREATE TABLE TB_GPS_DATA IF NOT EXISTS (_ID INTEGER PRIMARY KEY, _UPLOADED BOOLEAN, routeID INTEGER, " +
 					"time INTEGER, latitude REAL, longitude REAL)";
 	
@@ -142,12 +143,12 @@ public class Database implements TrackerDB{
 	}
 
 	@Override
-	public long addNewRoute(List<GPS> gps, List<DBMarker> markers, Long timeStart,
-			Long timeEnd, String notes, String routeName, String location) {
+	public long addNewRoute(List<GPS> gps, List<DBMarker> markers, Long startTime,
+			Long endTime, String notes, String routeName, String location) {
 		
 		ContentValues cv = new ContentValues();
-		cv.put("timeStart", timeStart);
-		cv.put("timeEnd", timeEnd);
+		cv.put("startTime", startTime);
+		cv.put("endTime", endTime);
 		if(routeName != null)
 			cv.put("name", routeName);
 		if(location != null)
@@ -163,14 +164,14 @@ public class Database implements TrackerDB{
 
 	@Override
 	public boolean editRoute(long routeID, List<GPS> gps, List<DBMarker> markers,
-			Long timeStart, Long timeEnd, String notes, String routeName, String location) {
+			Long startTime, Long endTime, String notes, String routeName, String location) {
 		boolean truth = true;
 		
 		ContentValues cv = new ContentValues();
-		if(timeStart != null)
-			cv.put("timeStart", timeStart);
-		if(timeEnd != null)
-			cv.put("timeEnd", timeEnd);
+		if(startTime != null)
+			cv.put("startTime", startTime);
+		if(endTime != null)
+			cv.put("endTime", endTime);
 		if(routeName != null)
 			cv.put("name", routeName);
 		if(location != null)
@@ -222,8 +223,8 @@ public class Database implements TrackerDB{
 
 	@Override
 	public DBRoute getRoute(long routeID) {
-		Cursor c = db.query("TB_ROUTES", new String[]{"routeID","timeStart",
-				"timeEnd","notes","routeName","location","countDataPoints"},
+		Cursor c = db.query("TB_ROUTES", new String[]{"routeID","startTime",
+				"endTime","notes","routeName","location","countDataPoints"},
 				"_ID = " + routeID, null, null, null, null, null);
 		c.moveToFirst();
 		DBRoute r = new DBRoute();

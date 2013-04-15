@@ -4,5 +4,7 @@
     <string name="app_name">MapTracker</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="marker_title">default title</string>
+    <string name="marker_date">default date</string>
 
 </resources>

@@ -35,6 +35,8 @@ public class ExportActivity extends Activity {
 		List<DBRoute> routes = new ArrayList<DBRoute>();
 		DBRoute r1 = new DBRoute();
 		DBRoute r2 = new DBRoute();
+		r1.routeName = "Hello I'm route 1";
+		r2.routeName = "Route2 Is Here";
 		r1.notes = "Testing route 1";
 		r2.notes = "Testing route 2 for realzz";
 		r1.timeStart = System.currentTimeMillis()- 4000;
