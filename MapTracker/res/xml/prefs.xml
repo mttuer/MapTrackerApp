@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:summary="All application settings"
+        android:title="Application Settings" >
+        <EditTextPreference
+            android:key="routeName"
+            android:summary="Please enter a route name"
+            android:title="Route Name" />
+
+        <CheckBoxPreference
+            android:key="checkBox"
+            android:summary="Checked = On"
+            android:title="Toggle Tutorial" />
+
+        <ListPreference
+            android:entries="@array/trackingOptions"
+            android:entryValues="@array/trackingValues"
+            android:key="trackpref"
+            android:summary="High = 1, Low = 10"
+            android:title="Tracking Accuracy" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
