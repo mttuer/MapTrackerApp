@@ -751,7 +751,6 @@ public class MainActivity extends FragmentActivity{
 		});
 		markerDateText = (TextView) findViewById(R.id.markerDate);
 		commentText = (TextView) findViewById(R.id.comment);
-		commentText.setText("Comment...");
 	}
 
 	private void setMarkerDetailListeners() {
