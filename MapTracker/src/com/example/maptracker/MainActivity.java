@@ -539,6 +539,7 @@ public class MainActivity extends FragmentActivity{
 		thisRoute = new DBRoute();
 		thisRoute.timeStart = System.currentTimeMillis();
 		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, gpsTimeFreq, 0, locListener);
+		Toast.makeText(this, "Starting Route", Toast.LENGTH_LONG).show();
 	}
 
 	//Stops tracking and saves the route data to the database
@@ -559,6 +560,7 @@ public class MainActivity extends FragmentActivity{
 		thisRoute.location = location;
 
 		database.addNewRoute(gpsList, markerList, thisRoute.timeStart, thisRoute.timeEnd, thisRoute.notes, thisRoute.routeName, thisRoute.location);
+		Toast.makeText(this, "Ending Route", Toast.LENGTH_LONG).show();
 	}
 
 	//Draws a line on the map for a given linked list of GPS objects
@@ -690,7 +692,7 @@ public class MainActivity extends FragmentActivity{
 		String time = sdf.format(d);
 		markerDateText.setText(time);
 
-		commentText.setText(theMarker.text);
+		commentText.setText(theMarker.hasText() ? theMarker.text:"Add a comment...");
 		markerDetails.setVisibility(FrameLayout.VISIBLE);
 
 		editMarkerTutorial();
@@ -749,14 +751,15 @@ public class MainActivity extends FragmentActivity{
 		});
 		markerDateText = (TextView) findViewById(R.id.markerDate);
 		commentText = (TextView) findViewById(R.id.comment);
+		commentText.setText("Comment...");
 	}
 
 	private void setMarkerDetailListeners() {
 		setTrashListener();
 		setCloseListener();
 		setPictureListener();
-		//setVideoListener();
-		setAudioListener();
+		setVideoListener();
+		//setAudioListener();
 		setDeleteVideoListener();
 		setDeletePhotoListener();
 		setDeleteAudioListener();
@@ -785,6 +788,8 @@ public class MainActivity extends FragmentActivity{
 			@Override
 			public void onClick(View v) {
 				if(theMarker!= null){
+					//TODO Add prompt to confirm deletion of marker
+					//TODO If confirmed, markerDetials.setVisibility(FrameLayout.GONE);
 					deleteMarker(theMarker);
 					markerDetails.setVisibility(FrameLayout.VISIBLE);
 				}
