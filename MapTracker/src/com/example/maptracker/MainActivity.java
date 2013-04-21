@@ -65,6 +65,7 @@ public class MainActivity extends FragmentActivity{
 	private static final String TAG="MT: ";
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
+	private static final int CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE = 300;
 
 	public LinkedList<DBMarker> markerList = new LinkedList<DBMarker>();
 	public LinkedList<GPS> gpsList = new LinkedList<GPS>();
@@ -478,6 +479,13 @@ public class MainActivity extends FragmentActivity{
 		startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
 
 	}
+	
+	public void audioButtonClicked() {
+		Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+		
+		//start the audio capture Intent
+		startActivityForResult(intent, CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE);
+	}
 
 	//Creates a marker on the map based on the current location and links it with the current marker
 	public void createMarker(DBMarker marker)
@@ -526,7 +534,9 @@ public class MainActivity extends FragmentActivity{
 
 		Marker locationMarker = markerHashTable.get(marker);
 		markerHashTable.remove(marker);
-		locationMarker.remove();
+		if(marker != null && locationMarker != null){
+			locationMarker.remove();
+		}
 	}
 
 	//Get location every 3 seconds and save a GPS object to the GPS list.
@@ -535,10 +545,25 @@ public class MainActivity extends FragmentActivity{
 	{
 		//Log start route
 		Log.w(TAG, "Start Tracking Route, Time: " + System.currentTimeMillis());
+		
+		Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+		long GPSLocationTime = 0;
+		if (locationGPS != null)
+			GPSLocationTime = locationGPS.getTime();
+
+		long NetLocationTime = 0;
+		if (locationNet != null)
+			NetLocationTime = locationNet.getTime();
+
+		if ( 0 < GPSLocationTime - NetLocationTime )
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, gpsTimeFreq, 0, locListener);
+		else
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, gpsTimeFreq, 0, locListener);
 
 		thisRoute = new DBRoute();
 		thisRoute.timeStart = System.currentTimeMillis();
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, gpsTimeFreq, 0, locListener);
 		Toast.makeText(this, "Starting Route", Toast.LENGTH_LONG).show();
 	}
 
@@ -639,6 +664,16 @@ public class MainActivity extends FragmentActivity{
 				// Video capture failed, advise user
 			}
 		}
+		
+		if (requestCode == CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE) {
+				if (resultCode == RESULT_OK) {
+					saveDataInMarker(data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+				} else if (resultCode == RESULT_CANCELED){
+					// User cancelled the video capture
+				} else {
+					// Video capture failed, advise user
+				}
+		}
 	}
 
 	private void saveDataInMarker(Intent data, int code) {
@@ -651,6 +686,9 @@ public class MainActivity extends FragmentActivity{
 		}
 		else if (code == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE){
 			newMarker.videoLink = data.getData().toString();
+		}
+		else if (code == CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE) {
+			newMarker.audioLink = data.getData().toString();
 		}
 
 		createMarker(newMarker);
@@ -758,7 +796,7 @@ public class MainActivity extends FragmentActivity{
 		setCloseListener();
 		setPictureListener();
 		setVideoListener();
-		//setAudioListener();
+		setAudioListener();
 		setDeleteVideoListener();
 		setDeletePhotoListener();
 		setDeleteAudioListener();
@@ -790,7 +828,7 @@ public class MainActivity extends FragmentActivity{
 					//TODO Add prompt to confirm deletion of marker
 					//TODO If confirmed, markerDetials.setVisibility(FrameLayout.GONE);
 					deleteMarker(theMarker);
-					markerDetails.setVisibility(FrameLayout.VISIBLE);
+					markerDetails.setVisibility(FrameLayout.GONE);
 				}
 			}
 		});
@@ -847,14 +885,9 @@ public class MainActivity extends FragmentActivity{
 	private void setAudioListener() {
 		// Action for Media button when no data
 		audioButton.setOnClickListener(new OnClickListener() {
-
-
-			@Override
 			public void onClick(View v) {
-				Intent takePhoto = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-				// After photo is taken, pass it to the result method
-				startActivityForResult(takePhoto, 0);
+				System.out.println("Audio button pressed.");
+				audioButtonClicked();
 			}
 		});
 
