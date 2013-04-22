@@ -634,7 +634,6 @@ public class MainActivity extends FragmentActivity{
 				DBMarker marker = new DBMarker();
 				if(imageFilePath != null){
 					System.out.println(imageFilePath.toString());
-					buttonVisibility();
 					marker.pictureLink = imageFilePath.toString();
 				}else{
 					marker.pictureLink = "failed";
@@ -667,7 +666,7 @@ public class MainActivity extends FragmentActivity{
 		
 		if (requestCode == CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE) {
 				if (resultCode == RESULT_OK) {
-					saveDataInMarker(data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+					saveDataInMarker(theMarker, data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
 				} else if (resultCode == RESULT_CANCELED){
 					// User cancelled the video capture
 				} else {
@@ -676,22 +675,17 @@ public class MainActivity extends FragmentActivity{
 		}
 	}
 
-	private void saveDataInMarker(Intent data, int code) {
-
-		DBMarker newMarker = new DBMarker();
-		newMarker.timeStamp = System.currentTimeMillis();
+	private void saveDataInMarker(DBMarker marker, Intent data, int code) {
 
 		if (code == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE){
-			newMarker.pictureLink = data.getData().toString();
+			marker.pictureLink = data.getData().toString();
 		}
 		else if (code == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE){
-			newMarker.videoLink = data.getData().toString();
+			marker.videoLink = data.getData().toString();
 		}
 		else if (code == CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE) {
-			newMarker.audioLink = data.getData().toString();
+			marker.audioLink = data.getData().toString();
 		}
-
-		createMarker(newMarker);
 
 	}
 
@@ -722,6 +716,7 @@ public class MainActivity extends FragmentActivity{
 		Log.w(TAG, "Edit Marker, Time: " + System.currentTimeMillis());
 
 		theMarker = marker;
+
 		String title = marker.name == null? "Marker": marker.name;
 		markerTitleText.setText(title);
 
@@ -734,6 +729,12 @@ public class MainActivity extends FragmentActivity{
 		markerDetails.setVisibility(FrameLayout.VISIBLE);
 
 		editMarkerTutorial();
+		if(theMarker != null){
+			System.out.println("The marker's paths");
+			System.out.println(theMarker.pictureLink == null? "none": theMarker.pictureLink);
+			System.out.println(theMarker.videoLink == null? "none": theMarker.videoLink);
+		}
+		buttonVisibility();
 		//markerDetails.getParent()
 	}
 
@@ -856,6 +857,7 @@ public class MainActivity extends FragmentActivity{
 			@Override
 			public void onClick(View v) {
 				theMarker.audioLink = null;
+				buttonVisibility();
 			}
 		});
 	}
@@ -867,6 +869,7 @@ public class MainActivity extends FragmentActivity{
 			@Override
 			public void onClick(View v) {
 				theMarker.pictureLink = null;
+				buttonVisibility();
 			}
 		});
 	}
@@ -878,6 +881,7 @@ public class MainActivity extends FragmentActivity{
 			@Override
 			public void onClick(View v) {
 				theMarker.videoLink = null;
+				buttonVisibility();
 			}
 		});
 	}
@@ -916,9 +920,9 @@ public class MainActivity extends FragmentActivity{
 	 @SuppressLint("NewApi")
 	private void buttonVisibility(){
 		  
-		  deletePhoto.setVisibility(theMarker.hasPic()? 0:1);
-		  deleteVideo.setVisibility(theMarker.hasVid()? 0:1);
-		  deleteAudio.setVisibility(theMarker.hasAudio()? 0:1);
+		  deletePhoto.setVisibility(theMarker.hasPic()? View.VISIBLE:View.GONE);
+		  deleteVideo.setVisibility(theMarker.hasVid()? View.VISIBLE:View.GONE);
+		  deleteAudio.setVisibility(theMarker.hasAudio()? View.VISIBLE:View.GONE);
 		  pictureButton.setAlpha(theMarker.hasPic()? (float)1:(float)0.5);
 		  videoButton.setAlpha(theMarker.hasVid()? (float)1:(float)0.5);
 		  audioButton.setAlpha(theMarker.hasAudio()? (float)1:(float)0.5);
