@@ -63,9 +63,13 @@ import dataWrappers.GPS;
 public class MainActivity extends FragmentActivity{
 
 	private static final String TAG="MT: ";
-	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
-	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
-	private static final int CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE = 300;
+	private static final int NEW_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 101;
+	private static final int NEW_CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
+	private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 201;
+	private static final int NEW_CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE = 300;
+	private static final int CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE = 301;
+
 
 	public LinkedList<DBMarker> markerList = new LinkedList<DBMarker>();
 	public LinkedList<GPS> gpsList = new LinkedList<GPS>();
@@ -378,35 +382,35 @@ public class MainActivity extends FragmentActivity{
 
 	protected void menuOpenTutorial() {
 		if (markerOpen) {
-		AlertDialog.Builder tut=new AlertDialog.Builder(MainActivity.this);
-		tut.setMessage("This is the Marker Panel. To start tracing your route" +
-				" switch the tracking on or add a marker, to automatically turn on tracking.\n" +
-				"Click on one of these icons to add a text comment," +
-				" picture, video or audio recording to this location.");
+			AlertDialog.Builder tut=new AlertDialog.Builder(MainActivity.this);
+			tut.setMessage("This is the Marker Panel. To start tracing your route" +
+					" switch the tracking on or add a marker, to automatically turn on tracking.\n" +
+					"Click on one of these icons to add a text comment," +
+					" picture, video or audio recording to this location.");
 
-		tut.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
+			tut.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {}
-		});
-		markerOpen = false;
-		tut.show();
+				@Override
+				public void onClick(DialogInterface dialog, int which) {}
+			});
+			markerOpen = false;
+			tut.show();
 		}
 	}
 
 	protected void menuCloseTutorial() {
 		if (markerClose) {
-		AlertDialog.Builder tut=new AlertDialog.Builder(MainActivity.this);
-		tut.setMessage("Data has been successfully added to the location. " +
-				"Click on the marker to edit the data or add new data.");
+			AlertDialog.Builder tut=new AlertDialog.Builder(MainActivity.this);
+			tut.setMessage("Data has been successfully added to the location. " +
+					"Click on the marker to edit the data or add new data.");
 
-		tut.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
+			tut.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {}
-		});
-		markerClose = false;
-		tut.show();
+				@Override
+				public void onClick(DialogInterface dialog, int which) {}
+			});
+			markerClose = false;
+			tut.show();
 		}
 	}
 
@@ -461,28 +465,18 @@ public class MainActivity extends FragmentActivity{
 
 		// start the image capture Intent
 		startActivityForResult(intent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
-
 	}
 
 	public void cameraButtonClicked() {
-		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);  
-
-		//ContentValues values = new ContentValues();  
-		ContentValues values = new ContentValues(3);  
-		values.put(MediaStore.Images.Media.DISPLAY_NAME, "testing");  
-		values.put(MediaStore.Images.Media.DESCRIPTION, "this is description");  
-		values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");  
-		imageFilePath = MainActivity.this.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);  
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageFilePath); 
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
 		// start the image capture Intent
 		startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-
 	}
-	
+
 	public void audioButtonClicked() {
 		Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-		
+
 		//start the audio capture Intent
 		startActivityForResult(intent, CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE);
 	}
@@ -497,7 +491,7 @@ public class MainActivity extends FragmentActivity{
 		//If location is not null, create a marker at the location and draw a line from that location to lat:0 long:0
 		if (currentLocation != null)
 		{
-			
+
 			//Get current location and create a LatLng object
 			Marker locationMarker = map.addMarker(new MarkerOptions().position(currentLocation));
 
@@ -545,7 +539,7 @@ public class MainActivity extends FragmentActivity{
 	{
 		//Log start route
 		Log.w(TAG, "Start Tracking Route, Time: " + System.currentTimeMillis());
-		
+
 		Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		Location locationNet = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
@@ -628,16 +622,15 @@ public class MainActivity extends FragmentActivity{
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+		if (requestCode == NEW_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
 
 				DBMarker marker = new DBMarker();
-				if(imageFilePath != null){
-					System.out.println(imageFilePath.toString());
-					marker.pictureLink = imageFilePath.toString();
-				}else{
-					marker.pictureLink = "failed";
-				}
+
+				// Image captured and saved to fileUri specified in the Intent
+				saveDataInMarker(marker,data,CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+				Toast.makeText(this, "Image saved to:\n" +
+						data.getData(), Toast.LENGTH_LONG).show();
 
 				//Log create picture marker
 				Log.w(TAG, "Create Picture Marker, Time: " + System.currentTimeMillis());
@@ -650,11 +643,71 @@ public class MainActivity extends FragmentActivity{
 				// Image capture failed, advise user
 			}
 		}
-
-		if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
+		else if (requestCode == NEW_CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
+
+				DBMarker marker = new DBMarker();
 				// Video captured and saved to fileUri specified in the Intent
-				saveDataInMarker(data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+				saveDataInMarker(marker,data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+				Toast.makeText(this, "Video saved to:\n" +
+						data.getData(), Toast.LENGTH_LONG).show();
+
+
+				//Log create picture marker
+				Log.w(TAG, "Create Video Marker, Time: " + System.currentTimeMillis());
+
+				createMarker(marker);
+
+			} else if (resultCode == RESULT_CANCELED) {
+				// User cancelled the image capture
+			} else {
+				// Image capture failed, advise user
+			}
+		}
+		else if (requestCode == NEW_CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+
+				DBMarker marker = new DBMarker();
+
+				saveDataInMarker(marker, data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+
+				//Log create picture marker
+				Log.w(TAG, "Create Audio Marker, Time: " + System.currentTimeMillis());
+
+				createMarker(marker);
+
+			} else if (resultCode == RESULT_CANCELED) {
+				// User cancelled the image capture
+			} else {
+				// Image capture failed, advise user
+			}
+		}
+		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+
+				// Image captured and saved to fileUri specified in the Intent
+				saveDataInMarker(theMarker,data,CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+				
+				//Log added picture to marker
+				Log.w(TAG, "Added a Picture to a Marker, Time: " + System.currentTimeMillis());
+				
+				Toast.makeText(this, "Image saved to:\n" +
+						data.getData(), Toast.LENGTH_LONG).show();
+			} else if (resultCode == RESULT_CANCELED) {
+				// User cancelled the image capture
+			} else {
+				// Image capture failed, advise user
+			}
+		}
+		else if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				
+				// Video captured and saved to fileUri specified in the Intent
+				saveDataInMarker(theMarker,data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+				
+				//Log added video to a marker
+				Log.w(TAG, "Added a Video to a Marker, Time: " + System.currentTimeMillis());
+				
 				Toast.makeText(this, "Video saved to:\n" +
 						data.getData(), Toast.LENGTH_LONG).show();
 			} else if (resultCode == RESULT_CANCELED) {
@@ -663,15 +716,22 @@ public class MainActivity extends FragmentActivity{
 				// Video capture failed, advise user
 			}
 		}
-		
-		if (requestCode == CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE) {
-				if (resultCode == RESULT_OK) {
-					saveDataInMarker(theMarker, data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
-				} else if (resultCode == RESULT_CANCELED){
-					// User cancelled the video capture
-				} else {
-					// Video capture failed, advise user
-				}
+
+		else if (requestCode == CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE) {
+			if (resultCode == RESULT_OK) {
+				
+				saveDataInMarker(theMarker, data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
+				
+				//Log added audio to a marker
+				Log.w(TAG, "Added Audio to a Marker, Time: " + System.currentTimeMillis());
+				
+				Toast.makeText(this, "Audio saved to:\n" +
+						data.getData(), Toast.LENGTH_LONG).show();
+			} else if (resultCode == RESULT_CANCELED){
+				// User cancelled the video capture
+			} else {
+				// Video capture failed, advise user
+			}
 		}
 	}
 
@@ -740,18 +800,18 @@ public class MainActivity extends FragmentActivity{
 
 	private void editMarkerTutorial() {
 		if (editMarker) {
-		AlertDialog.Builder tut=new AlertDialog.Builder(MainActivity.this);
-		tut.setMessage("You can edit your data here. Click icon to add a picture, " +
-				"video or audio. Click on the text field to add a comment. " +
-				"Click on the Trash icon to erase data.");
+			AlertDialog.Builder tut=new AlertDialog.Builder(MainActivity.this);
+			tut.setMessage("You can edit your data here. Click icon to add a picture, " +
+					"video or audio. Click on the text field to add a comment. " +
+					"Click on the Trash icon to erase data.");
 
-		tut.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
+			tut.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {}
-		});
-		editMarker = false;
-		tut.show();
+				@Override
+				public void onClick(DialogInterface dialog, int which) {}
+			});
+			editMarker = false;
+			tut.show();
 		}
 	}
 
@@ -914,18 +974,18 @@ public class MainActivity extends FragmentActivity{
 			}
 		});
 	}
-	
-	
+
+
 	//TODO ADD THIS EVERYWHERE
-	 @SuppressLint("NewApi")
+	@SuppressLint("NewApi")
 	private void buttonVisibility(){
-		  
-		  deletePhoto.setVisibility(theMarker.hasPic()? View.VISIBLE:View.GONE);
-		  deleteVideo.setVisibility(theMarker.hasVid()? View.VISIBLE:View.GONE);
-		  deleteAudio.setVisibility(theMarker.hasAudio()? View.VISIBLE:View.GONE);
-		  pictureButton.setAlpha(theMarker.hasPic()? (float)1:(float)0.5);
-		  videoButton.setAlpha(theMarker.hasVid()? (float)1:(float)0.5);
-		  audioButton.setAlpha(theMarker.hasAudio()? (float)1:(float)0.5);
+
+		deletePhoto.setVisibility(theMarker.hasPic()? View.VISIBLE:View.GONE);
+		deleteVideo.setVisibility(theMarker.hasVid()? View.VISIBLE:View.GONE);
+		deleteAudio.setVisibility(theMarker.hasAudio()? View.VISIBLE:View.GONE);
+		pictureButton.setAlpha(theMarker.hasPic()? (float)1:(float)0.5);
+		videoButton.setAlpha(theMarker.hasVid()? (float)1:(float)0.5);
+		audioButton.setAlpha(theMarker.hasAudio()? (float)1:(float)0.5);
 	}
 
 
