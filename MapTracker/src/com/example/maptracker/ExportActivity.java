@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import util.Database;
+
 import dataWrappers.DBMarker;
 import dataWrappers.DBRoute;
 
@@ -23,6 +25,8 @@ public class ExportActivity extends Activity {
 	private boolean firstTutorial = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Database database = new Database(this);
+		database.open();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_export);
 		
@@ -30,14 +34,7 @@ public class ExportActivity extends Activity {
 		
 		list = (ExpandableListView)findViewById(R.id.expandableListView1);
 		List<List<String>> test = new LinkedList<List<String>>();
-		List<String> first = new LinkedList<String>();
-		List<String> second = new LinkedList<String>();
-		first.add("First item");
-		first.add("child content");
-		second.add("Second item");
-		second.add("child2 content");
-		test.add(first);
-		test.add(second);
+		
 		//CHANGE
 		List<DBRoute> routes = new ArrayList<DBRoute>();
 		DBRoute r1 = new DBRoute();
@@ -60,8 +57,12 @@ public class ExportActivity extends Activity {
 		dbms.add(dbm);
 		allMarkers.put(r1, dbms);
 		allMarkers.put(r2, dbms);
-		
-		BaseExpandableListAdapter exListAdaptor = new ExportExpandableListAdaptor(this,routes, allMarkers);
+		routes = database.getAllRoutes();
+		System.out.println(routes.size() + " routes inside the database");
+		for(DBRoute dbr: routes){
+			allMarkers.put(dbr, database.getMarkers(dbr.routeID));
+		}
+		BaseExpandableListAdapter exListAdaptor = new ExportExpandableListAdaptor(this,routes, allMarkers,database);
 		System.out.println("Testing if this prints to the log!");
 		list.setAdapter(exListAdaptor);
 		

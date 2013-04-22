@@ -9,13 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.Database;
+
 import dataWrappers.DBMarker;
 import dataWrappers.DBRoute;
+import dataWrappers.GPS;
 
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -32,12 +37,13 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 	Context context;
 	List<DBRoute> routes;
 	Map<DBRoute, List<DBMarker>> allMarkers;
-	
-	public ExportExpandableListAdaptor(Context ctx, List<DBRoute> routes, Map<DBRoute,List<DBMarker>> markers){
+	Database db;
+	public ExportExpandableListAdaptor(Context ctx, List<DBRoute> routes, Map<DBRoute,List<DBMarker>> markers, Database db){
 		//super();
 		context = ctx;
 		allMarkers = markers;
 		this.routes = routes;
+		this.db = db;
 		System.out.println("Testing: From constructor");
 	}
 	
@@ -56,129 +62,73 @@ public class ExportExpandableListAdaptor extends BaseExpandableListAdapter {
 	public View getChildView(int arg0, int arg1, boolean arg2, View arg3,
 			ViewGroup arg4) {
 		DBRoute r = routes.get(arg0);
-		// Create a vertical view to store the interface
-		LinearLayout vert = new LinearLayout(context);
-		vert.setOrientation(LinearLayout.VERTICAL);
-		
-		// create a horizontal view to store the 
-		LinearLayout hz = new LinearLayout(context);
-		hz.setOrientation(LinearLayout.HORIZONTAL);
+		FrameLayout fl = new FrameLayout(context);
+		fl.setBackgroundColor(Color.BLUE);
+		LayoutInflater.from(context).inflate(R.layout.route_export_view, fl, true);
 
-		// view representing location
-		TextView tv = new TextView(context);
+		// Set the route time
+		TextView routeTime = (TextView)fl.findViewById(R.id.routeTime);
 		Date d = new Date(r.timeStart);
 		Date dEnd = new Date(r.timeEnd);
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		String routeTimes;
-		routeTimes = sdf.format(d) + "-" + sdf.format(dEnd);
-		
-		tv.setText("Route Time: " + routeTimes);
-		
-		hz.addView(tv);
-		
-		// button for editing 
-		Button editButton = new Button(context);
-		editButton.setText("Edit Markers");
-		hz.addView(editButton);
-		vert.addView(hz);
-		
-		// Add text view for notes about the route
-		FrameLayout fl = new FrameLayout(context);
-		EditText edTxt = new EditText(context);
-		edTxt.setLines(4);
-		edTxt.setText(r.notes);
-		fl.addView(edTxt);
-		fl.setId(1000);
-		vert.addView(fl);
-		
-		
-		//---Add the export button --------
-		Button exportButton = new Button(context);
-		RelativeLayout.LayoutParams layoutParams = 
-			    (RelativeLayout.LayoutParams)exportButton.getLayoutParams();
-		if(layoutParams == null){
-			System.out.println("Layoutparams are null");
-			layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		}
-		layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-		exportButton.setText("Export");
-		exportButton.setLayoutParams(layoutParams);
-		exportButton.setOnClickListener(new OnClickListener(){
 
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		String routeTimes = sdf.format(d) + "-" + sdf.format(dEnd);
+		System.out.println(routeTime == null);
+		routeTime.setText(routeTimes);
+
+		//Set the export view
+		Button b = (Button)fl.findViewById(R.id.button2);
+
+		EditText editText = (EditText)fl.findViewById(R.id.editText1);
+		LinearLayout linLayout = (LinearLayout)fl.findViewById(R.id.exportOptions);
+		editText.setVisibility(EditText.VISIBLE);
+		linLayout.setVisibility(LinearLayout.GONE);
+		
+		//Set the button to switch to Export Options
+		b.setOnClickListener(new OnClickListener(){
+			
 			@Override
 			public void onClick(View arg0) {
-				ViewGroup vg = (ViewGroup)arg0.getParent().getParent();
-				View vc;
-				for(int i = 0; i < vg.getChildCount(); i ++){
-					
-					if((vc = vg.getChildAt(i)).getId() == 1000){
-						System.out.println("WORKED!?!?");
-						FrameLayout lc = (FrameLayout)vc;
-						lc.removeAllViews();
-						TextView tv = new TextView(arg0.getContext());
-						tv.setText("WORKED?!?!?");
-						
-						lc.addView(ExportExpandableListAdaptor.getExportButtonView(arg0.getContext()));
-						
-					}
+				System.out.println("In OnClick Method");
+				EditText editText = (EditText)((LinearLayout)arg0.getParent()).findViewById(R.id.editText1);
+				LinearLayout linLayout = (LinearLayout)((LinearLayout)arg0.getParent()).findViewById(R.id.exportOptions);
+				Button but = ((Button)arg0);
+				if(but.getText().equals("Export")){
+					but.setText("Done");
+					editText.setVisibility(View.GONE);
+					linLayout.setVisibility(View.VISIBLE);
+				}else{
+					editText.setVisibility(View.VISIBLE);
+					linLayout.setVisibility(View.GONE);
+					but.setText("Export");
 				}
-				((Button)arg0).setText(vg.getChildAt(1).toString());
+				
 				
 			}
 			
 		});
-		//------------------
 		
-		//--- Put the button in a relative layout to center it 
-		RelativeLayout rl = new RelativeLayout(context);
-		rl.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-		rl.setBackgroundColor(0xFF00FF00 );
-		rl.addView(exportButton);
-		vert.addView(rl);
+		Button bTxt = (Button)fl.findViewById(R.id.button5);
+		bTxt.setOnClickListener(new ClickForRoute(r));
+		return fl;
+	}
+	
+	
+	class ClickForRoute implements OnClickListener{
+		public DBRoute route;
+		public ClickForRoute(DBRoute r){
+			route = r;
+		}
+		@Override
+		public void onClick(View arg0) {
+			((Button)arg0).setText("Worked");
+			for(GPS g: db.getGPSData(route.routeID)){
+				System.out.println(g.longitude + " , " + g.latitude);
+			}
+		}
 		
-		return vert;
 	}
 
-	static View getExportButtonView(Context ctx){
-		LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		LinearLayout vl = new LinearLayout(ctx);
-		vl.setOrientation(LinearLayout.VERTICAL);
-		Button b1 = new Button(ctx);
-		Button b2 = new Button(ctx);
-		Button b3 = new Button(ctx);
-		Button b4 = new Button(ctx);
-		b1.setText("kml");
-		b2.setText("html");
-		b3.setText("txt");
-		b4.setText("file");
-		TextView tv1 = new TextView(ctx);
-		TextView tv2 = new TextView(ctx);
-		TextView tv3 = new TextView(ctx);
-		TextView tv4 = new TextView(ctx);
-		tv1.setText("KML");
-		tv2.setText("HTML");
-		tv3.setText("TXT");
-		tv4.setText("FILE");
-		LinearLayout hz1 = new LinearLayout(ctx);
-		LinearLayout hz2 = new LinearLayout(ctx);
-
-		hz1.setOrientation(LinearLayout.HORIZONTAL);
-		hz1.addView(b1,lp);
-		hz1.addView(b2,lp);
-		hz1.addView(b3,lp);
-		hz1.addView(b4,lp);
-		hz2.setOrientation(LinearLayout.HORIZONTAL);
-		hz2.addView(tv1,lp);
-		hz2.addView(tv2,lp);
-		hz2.addView(tv3,lp);
-		hz2.addView(tv4,lp);
-		
-		vl.addView(hz1,lp);
-		vl.addView(hz2,lp);
-		
-		return vl;
-	}
 	@Override
 	public int getChildrenCount(int arg0) {
 		return allMarkers.get(routes.get(arg0)).size();
