@@ -17,6 +17,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.location.Criteria;
 import android.location.Location;
@@ -24,6 +25,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.Time;
@@ -63,6 +65,7 @@ import dataWrappers.GPS;
 public class MainActivity extends FragmentActivity{
 
 	private static final String TAG="MT: ";
+	private static final int RESULT_SETTINGS = 1;
 	private static final int NEW_CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
 	private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 101;
 	private static final int NEW_CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
@@ -97,7 +100,9 @@ public class MainActivity extends FragmentActivity{
 	ToggleButton trackingButton;
 	Uri imageFilePath;
 	boolean first = true, markerOpen = true, markerClose = true, editMarker = true, tutExport = true;
-	boolean tutorial = true;
+	boolean tutorial;
+	String routeNameFS;
+	float accuracyFS;
 
 
 	//---------------------------------------------------------------
@@ -304,7 +309,8 @@ public class MainActivity extends FragmentActivity{
 			public void onClick(View view) {
 				Intent i = new Intent(view.getContext(), MenuActivity.class);
 				i.putExtra("tutorial", tutorial);
-				startActivity(i);
+				startActivityForResult(i, RESULT_SETTINGS);
+				
 				Object response = i.getExtras().get("newFreq");
 				if(response != null){
 					gpsTimeFreq = (Integer)response;
@@ -381,7 +387,7 @@ public class MainActivity extends FragmentActivity{
 	}
 
 	protected void menuOpenTutorial() {
-		if (markerOpen) {
+		if (markerOpen && tutorial) {
 			AlertDialog.Builder tut=new AlertDialog.Builder(MainActivity.this);
 			tut.setMessage("This is the Marker Panel. To start tracing your route" +
 					" switch the tracking on or add a marker, to automatically turn on tracking.\n" +
@@ -399,7 +405,7 @@ public class MainActivity extends FragmentActivity{
 	}
 
 	protected void menuCloseTutorial() {
-		if (markerClose) {
+		if (markerClose && tutorial) {
 			AlertDialog.Builder tut=new AlertDialog.Builder(MainActivity.this);
 			tut.setMessage("Data has been successfully added to the location. " +
 					"Click on the marker to edit the data or add new data.");
@@ -419,17 +425,19 @@ public class MainActivity extends FragmentActivity{
 	 */
 
 	private void startTutorial() {
-		AlertDialog.Builder tut=new AlertDialog.Builder(MainActivity.this);
-		tut.setMessage("Click the arrow at the bottom of the page to mark your first location," +
-				" export data, or change settings.");
+		if (tutorial) {
+			AlertDialog.Builder tut=new AlertDialog.Builder(MainActivity.this);
+			tut.setMessage("Click the arrow at the bottom of the page to mark your first location," +
+					" export data, or change settings.");
 
-		tut.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
+			tut.setNeutralButton("Continue", new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {}
-		});
+				@Override
+				public void onClick(DialogInterface dialog, int which) {}
+			});
 
-		tut.show();
+			tut.show();
+		}
 	}
 
 	private void firstTimeTutorial() {
@@ -687,10 +695,10 @@ public class MainActivity extends FragmentActivity{
 
 				// Image captured and saved to fileUri specified in the Intent
 				saveDataInMarker(theMarker,data,CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-				
+
 				//Log added picture to marker
 				Log.w(TAG, "Added a Picture to a Marker, Time: " + System.currentTimeMillis());
-				
+
 				Toast.makeText(this, "Image saved to:\n" +
 						data.getData(), Toast.LENGTH_LONG).show();
 			} else if (resultCode == RESULT_CANCELED) {
@@ -701,13 +709,13 @@ public class MainActivity extends FragmentActivity{
 		}
 		else if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				
+
 				// Video captured and saved to fileUri specified in the Intent
 				saveDataInMarker(theMarker,data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
-				
+
 				//Log added video to a marker
 				Log.w(TAG, "Added a Video to a Marker, Time: " + System.currentTimeMillis());
-				
+
 				Toast.makeText(this, "Video saved to:\n" +
 						data.getData(), Toast.LENGTH_LONG).show();
 			} else if (resultCode == RESULT_CANCELED) {
@@ -719,12 +727,12 @@ public class MainActivity extends FragmentActivity{
 
 		else if (requestCode == CAPTURE_AUDIO_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
-				
+
 				saveDataInMarker(theMarker, data,CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);
-				
+
 				//Log added audio to a marker
 				Log.w(TAG, "Added Audio to a Marker, Time: " + System.currentTimeMillis());
-				
+
 				Toast.makeText(this, "Audio saved to:\n" +
 						data.getData(), Toast.LENGTH_LONG).show();
 			} else if (resultCode == RESULT_CANCELED){
@@ -733,7 +741,19 @@ public class MainActivity extends FragmentActivity{
 				// Video capture failed, advise user
 			}
 		}
+		if(requestCode == RESULT_SETTINGS) {
+			setUserSettings();
+		}
 	}
+	
+	private void setUserSettings() {
+        SharedPreferences settings = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        
+        tutorial = settings.getBoolean("checkBox", tutorial);
+        routeNameFS = settings.getString("routeName", "" + System.currentTimeMillis());
+        accuracyFS = settings.getFloat("trackpref", (float) 5.00);
+    }
 
 	private void saveDataInMarker(DBMarker marker, Intent data, int code) {
 
@@ -751,10 +771,10 @@ public class MainActivity extends FragmentActivity{
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-
-		return true;
+		Intent i = new Intent(this, SettingsActivity.class);
+		startActivityForResult(i, RESULT_SETTINGS);
+		
+        return true;
 	}
 
 	private void initializeMarkerDetailsButtons() {
@@ -799,7 +819,7 @@ public class MainActivity extends FragmentActivity{
 	}
 
 	private void editMarkerTutorial() {
-		if (editMarker) {
+		if (editMarker && tutorial) {
 			AlertDialog.Builder tut=new AlertDialog.Builder(MainActivity.this);
 			tut.setMessage("You can edit your data here. Click icon to add a picture, " +
 					"video or audio. Click on the text field to add a comment. " +

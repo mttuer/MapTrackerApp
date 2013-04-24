@@ -73,7 +73,7 @@ public final class R {
         public static final int markerDetailsFrame=0x7f0a000f;
         public static final int markerTitle=0x7f0a0012;
         public static final int mediaButtons=0x7f0a0016;
-        public static final int menu_settings=0x7f0a0030;
+        public static final int menu_settings=0x7f0a0031;
         public static final int pictureButton=0x7f0a0018;
         public static final int routeTime=0x7f0a0025;
         public static final int slidingDrawer1=0x7f0a0005;
@@ -86,6 +86,7 @@ public final class R {
         public static final int titleAndTime=0x7f0a0011;
         public static final int togglebutton=0x7f0a0008;
         public static final int trashButton=0x7f0a0010;
+        public static final int tutCheckBox=0x7f0a0030;
         public static final int videoButton=0x7f0a0017;
     }
     public static final class layout {

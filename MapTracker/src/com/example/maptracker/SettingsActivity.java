@@ -15,6 +15,7 @@ public class SettingsActivity extends PreferenceActivity {
 	private static final String TAG="MT: ";
 
 	boolean tutorial;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

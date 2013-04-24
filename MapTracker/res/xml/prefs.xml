@@ -10,6 +10,7 @@
             android:title="Route Name" />
 
         <CheckBoxPreference
+            android:id="@+id/tutCheckBox"
             android:key="checkBox"
             android:summary="Checked = On"
             android:title="Toggle Tutorial" />

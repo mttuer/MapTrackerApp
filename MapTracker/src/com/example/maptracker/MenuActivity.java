@@ -114,6 +114,6 @@ public class MenuActivity extends Activity{
 	
 	public boolean isTutorialOn() {
 		SharedPreferences tut = PreferenceManager.getDefaultSharedPreferences(MenuActivity.this);
-		return tut.getBoolean("checkBox", true);
+		return tut.getBoolean("checkBox", tutorial);
 	}
 }
